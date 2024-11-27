@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'role',
+        'reset_token'
     ];
 
     /**
@@ -45,7 +48,28 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function tableBookings(){
+    public function tableBookings()
+    {
         return $this->hasMany(TableBooking::class);
+    }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function events()
+    {
+        return $this->belongsToMany(Event::class, 'event_participants');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    // di model User.php
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }
