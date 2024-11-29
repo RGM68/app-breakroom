@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Table;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class TableController extends Controller
@@ -32,10 +33,13 @@ class TableController extends Controller
     public function store(Request $request)
     {
         //
+        $path = $request->file('image')->storePublicly('photos', 'public');
+        $ext = $request->file('image')->extension();
         $table = new Table();
         $table->number = $request->number;
         $table->status = $request->status;
         $table->capacity = $request->capacity;
+        $table->image = $path;
         $table->save();
         return redirect('/admin');
 
@@ -48,7 +52,11 @@ class TableController extends Controller
     {
         //
         $table = Table::findOrFail($id);
-        return view('admin.table.show', compact('table'));
+        $image = Storage::url($table->image);
+        return view('admin.table.show', [
+            'table' => $table,
+            'image' => $image
+        ]);
     }
 
     /**

@@ -2,10 +2,12 @@
 // app/Models/Event.php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'name', 'description', 'date', 'max_participants'
     ];
@@ -17,8 +19,11 @@ class Event extends Model
     }
 
     // Relasi many-to-many untuk peserta event
-    public function participants()
-    {
-        return $this->belongsToMany(User::class, 'event_participants');
+    // public function participants()
+    // {
+    //     return $this->belongsToMany(User::class, 'event_participants');
+    // }
+    public function eventRegistration(){
+        return $this->hasMany(EventRegistration::class);
     }
 }

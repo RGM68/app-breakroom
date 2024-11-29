@@ -52,14 +52,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(TableBooking::class);
     }
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
-    }
 
     public function events()
     {
-        return $this->belongsToMany(Event::class, 'event_participants');
+        return $this->hasMany(EventRegistration::class);
     }
 
     public function isAdmin()

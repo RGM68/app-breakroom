@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('number');
             $table->string('status')->default('open');
             $table->integer('capacity');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

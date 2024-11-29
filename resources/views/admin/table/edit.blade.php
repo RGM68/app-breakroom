@@ -8,7 +8,10 @@
     <input type="text" id="number" name="number" value="{{ $table->number }}" required>
     <br />
     <label for="status">Status:</label>
-    <input type="text" id="status" name="status" value="{{ $table->status }}" required>
+    <select name="status" id="status" required>
+        <option value="open">Open</option>
+        <option value="closed">Closed</option>
+    </select>
     <br />
     <label for="capacity">Capacity:</label>
     <input type="number" id="capacity" name="capacity" value="{{ $table->capacity }}" required>

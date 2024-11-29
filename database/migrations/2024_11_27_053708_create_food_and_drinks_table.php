@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('food_and_drinks', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('description');
+            $table->string('category');
+            $table->integer('price');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
