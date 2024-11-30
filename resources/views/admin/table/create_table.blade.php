@@ -1,12 +1,31 @@
-<form action="/admin/table/create_table" method="post" enctype="multipart/form-data">
-    @csrf
-    Number: <input type="text" name="number" value="" required><br />
-    Status: <select name="status" id="status" required>
-        <option value="open">Open</option>
-        <option value="closed">Closed</option>
-    </select>
-    <br />
-    Capacity: <input type="number" name="capacity" value="" required><br />
-    Image: <input type="file" name="image" required>
-    <button type="submit">Submit</button>
-</form>
+@extends('layout.app')
+
+@section('title', 'Create New Table')
+
+@section('content')
+
+<div class="create-table-container w-50" style="margin: auto; background-color: #BAF4FF; padding: 20px; border-radius: 10px">
+    <h1 class="text-center">Create Table</h1>
+    <form class="form" action="/admin/table/create_table" method="post" enctype="multipart/form-data">
+        @csrf
+        <label for="number" class="form-label">Number</label> 
+        <input class="form-control" type="number" name="number" id="number" value="" required><br />
+    
+        <label for="status " class="form-label">Status</label> 
+        <select name="status" id="status" class="form-select" required>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+        </select>
+        <br />
+        <label for="capacity" class="form-label">Capacity</label> 
+        <input class="form-control" type="number" name="capacity" id="capacity" value="" required><br />
+        
+        <label for="image" class="form-label">Image</label> 
+        <input type="file" class="form-control" name="image" id="image" required> 
+        <br />
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+    <a href="/admin" class="btn btn-info mt-3">Back to Dashboard</a>
+</div>
+
+@endsection

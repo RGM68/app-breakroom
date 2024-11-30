@@ -1,22 +1,36 @@
-<h1>Edit Table</h1>
+@extends('layout.app')
 
-<form method="POST" action="/admin/table/{{ $table->id }}">
-    @csrf
-    @method('PUT')
+@section('title', 'Edit Table #' . $table->number)
 
-    <label for="number">Table Number:</label>
-    <input type="text" id="number" name="number" value="{{ $table->number }}" required>
-    <br />
-    <label for="status">Status:</label>
-    <select name="status" id="status" required>
-        <option value="open">Open</option>
-        <option value="closed">Closed</option>
-    </select>
-    <br />
-    <label for="capacity">Capacity:</label>
-    <input type="number" id="capacity" name="capacity" value="{{ $table->capacity }}" required>
-    <br />
-    <button type="submit">Update Table</button>
-</form>
+@section('content')
 
-<a href="/admin">Back to Table List</a>
+
+<div class="edit-table-container w-50" style="margin: auto; background-color: #BDCBFF; padding: 20px; border-radius: 10px">
+    <h1>Edit Table #{{$table->number}}</h1>
+    <img src="{{asset(path: $image)}}" class="text-center my-2" style="width: 150px; border-radius: 10px"/><br />
+    <form class="form" method="POST" action="/admin/table/{{ $table->id }}">
+        @csrf
+        @method('PUT')
+
+        <label for="number" class="form-label">Number</label> 
+        <input class="form-control" type="number" name="number" id="number" value="{{ $table->number }}" required>
+        <br />
+
+        <label for="status " class="form-label">Status</label> 
+        <select name="status" id="status" class="form-select" required>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+        </select>
+        <br />
+        <label for="capacity" class="form-label">Capacity</label> 
+        <input class="form-control" type="number" name="capacity" id="capacity" value="{{ $table->capacity }}" required>
+        <br />
+        <label for="image" class="form-label">Image</label> 
+        <input type="file" class="form-control" name="image" id="image" required> 
+        <br />
+        <button type="submit" class="btn btn-primary">Update Table</button>
+    </form>
+    <a href="/admin" class="btn btn-info mt-3">Back to Dashboard</a>
+</div>
+
+@endsection

@@ -66,7 +66,8 @@ class TableController extends Controller
     {
         //
         $table = Table::findOrFail($id);
-        return view('admin.table.edit', ['table' => $table]);
+        $image = Storage::url($table->image);
+        return view('admin.table.edit', ['table' => $table, 'image' => $image]);
     }
 
     /**

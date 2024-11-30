@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class AdminController extends Controller
 {
@@ -12,6 +14,9 @@ class AdminController extends Controller
     {
         //
         $tables = Table::all();
+        foreach ($tables as $table) {
+            $table->image_url = Storage::url($table->image);
+        }
         return view('admin.index', ['tables' => $tables]);
     }
 
