@@ -26,6 +26,11 @@
             <a href="/admin/table/{{$table->id}}" class="btn btn-primary me-1">View Details</a>
             <a href="/admin/table/{{$table->id}}/edit" class="btn btn-warning">Edit Table</a>
             <a href="/admin/table/{{$table->id}}/change_image" class="btn btn-success">Change Image</a>
+            <form action="/admin/table/{{$table->id}}" method="post">
+                @method('DELETE')
+                @csrf
+                <button type="submit" class="btn btn-danger mt-2" onclick="return confirm('Delete?')">Delete Table</button>
+            </form>
         </div>
     </div>
 @endforeach
