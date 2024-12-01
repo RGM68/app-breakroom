@@ -13,7 +13,7 @@ class AdminController extends Controller
     public function index()
     {
         //
-        $tables = Table::all();
+        $tables = Table::orderBy('capacity', 'desc')->take(3)->get();
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }

@@ -5,7 +5,7 @@
 @section('content')
     
 <h2>Tables</h2>
-<a href="/admin/table/create_table" class="btn btn-secondary mb-3">Create New table</a>
+<p><a href="{{route('table.index')}}">View All Tables</a></p>
 <div class="tables-container" style="display: flex; flex-wrap: wrap;">
 @foreach ($tables as $table)
     <div class="table-single text-center m-2" style="background-color: lightgrey; max-width: 400px; width: 400px; border-radius: 10px; padding: 10px">
@@ -19,10 +19,7 @@
             red
         @endif
         ;font-weight: bolder">{{$table->status}}</p>
-        <div>
-            <a href="/admin/table/{{$table->id}}" class="btn btn-primary me-1">SHOW</a>
-            <a href="/admin/table/{{$table->id}}/edit" class="btn btn-warning">EDIT</a>
-        </div>
+       
     </div>
 @endforeach
 </div>

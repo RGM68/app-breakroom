@@ -7,7 +7,7 @@
 <div class="event-container" style="max-width:500px; margin: auto">
     <div class="event-card text-center p-3" style="background-color: lightblue; border-radius: 10px">
         <h1>Table Details</h1>
-        <img src="{{asset($image)}}"  style="width: 200px; border-radius: 10px"/><br />
+        <img src="{{asset($image)}}"  style="width: 250px; border-radius: 10px"/><br />
         <p><strong>Table Number:</strong> {{ $table->number }}</p>
         <p><strong>Capacity:</strong> {{ $table->capacity }}</p>
         <p style="color: 
@@ -19,7 +19,7 @@
         ;font-weight: bolder">{{$table->status}}</p>
         <div>
     </div>
-    <a href="/admin" class="btn btn-info my-3">Back to Dashboard</a>
+    <a href="/admin/tables" class="btn btn-info mt-3">Back to Table List</a>
 </div>
 
 @endsection

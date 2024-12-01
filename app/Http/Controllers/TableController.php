@@ -14,8 +14,11 @@ class TableController extends Controller
     public function index()
     {
         //
-        $tables = Table::all();
-        return view('admin.index', ['tables' => $tables]);
+        $tables = Table::orderBy('number', 'asc')->get();
+        foreach ($tables as $table) {
+            $table->image_url = Storage::url($table->image);
+        }
+        return view('admin.table.index', ['tables' => $tables]);
     }
 
     /**
@@ -41,7 +44,7 @@ class TableController extends Controller
         $table->capacity = $request->capacity;
         $table->image = $path;
         $table->save();
-        return redirect('/admin');
+        return redirect('/admin/tables');
 
     }
 
@@ -70,6 +73,14 @@ class TableController extends Controller
         return view('admin.table.edit', ['table' => $table, 'image' => $image]);
     }
 
+    public function changeImage($id)
+    {
+        //
+        $table = Table::findOrFail($id);
+        $image = Storage::url($table->image);
+        return view('admin.table.change_image', ['table' => $table, 'image' => $image]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -78,13 +89,29 @@ class TableController extends Controller
         //
         $table = Table::findOrFail($id);
         $table->number = $request->number;
-        $table->status = $request->status;
         $table->capacity = $request->capacity;
         $table->save();
 
-        return redirect('/admin')->with('success', 'Table updated successfully!');
+        return redirect('/admin/tables')->with('success', 'Table updated successfully!');
+    }
+    public function updateStatus(Request $request, $id)
+    {
+        $table = Table::findOrFail($id);
+        $table->status = $request->input('status');
+        $table->save();
+    
+        return redirect('/admin/tables')->with('success', 'Table updated successfully!');
     }
 
+    public function updateImage(Request $request, $id){
+        $table = Table::findOrFail($id);
+        $path = $request->file('image')->storePublicly('photos', 'public');
+        $ext = $request->file('image')->extension();
+        $table->image = $path;
+        $table->save();
+        return redirect('/admin/tables')->with('success', 'Table updated successfully!');
+    }
+    
     /**
      * Remove the specified resource from storage.
      */
@@ -93,6 +120,6 @@ class TableController extends Controller
         //
         $table = Table::findOrFail($id);
         $table->delete();
-        return redirect('/admin');
+        return redirect('/admin/tables');
     }
 }

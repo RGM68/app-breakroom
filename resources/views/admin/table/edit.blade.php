@@ -15,22 +15,12 @@
         <label for="number" class="form-label">Number</label> 
         <input class="form-control" type="number" name="number" id="number" value="{{ $table->number }}" required>
         <br />
-
-        <label for="status " class="form-label">Status</label> 
-        <select name="status" id="status" class="form-select" required>
-            <option value="Open">Open</option>
-            <option value="Closed">Closed</option>
-        </select>
-        <br />
         <label for="capacity" class="form-label">Capacity</label> 
         <input class="form-control" type="number" name="capacity" id="capacity" value="{{ $table->capacity }}" required>
         <br />
-        <label for="image" class="form-label">Image</label> 
-        <input type="file" class="form-control" name="image" id="image" required> 
-        <br />
         <button type="submit" class="btn btn-primary">Update Table</button>
     </form>
-    <a href="/admin" class="btn btn-info mt-3">Back to Dashboard</a>
+    <a href="/admin/tables" class="btn btn-info mt-3">Back to Table List</a>
 </div>
 
 @endsection

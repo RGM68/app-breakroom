@@ -20,15 +20,19 @@ Route::get('/', function () {
 Route::resource('tables', TableController::class);
 Route::resource('table-bookings', TableBookingController::class);
 
-Route::get('/admin', [AdminController::class, 'index']);
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
 Route::get('/admin/table/create_table', [AdminController::class, 'create_table']);
 Route::post('/admin/table/create_table', [TableController::class, 'store']);
 
+Route::get('/admin/tables', [TableController::class, 'index'])->name('table.index');
 Route::get('/admin/table/{id}', [TableController::class, 'show'])->name('table.show');
 
 Route::get('/admin/table/{id}/edit', [TableController::class, 'edit'])->name('table.edit');
+Route::get('/admin/table/{id}/change_image', [TableController::class, 'changeImage'])->name('table.changeImage');
 Route::put('/admin/table/{id}', [TableController::class, 'update'])->name('table.update');
+Route::put('/admin/table/{id}/status', [TableController::class, 'updateStatus'])->name('table.updateStatus');
+Route::put('/admin/table/{id}/change_image', [TableController::class, 'updateImage'])->name('table.updateImage');
 
 Route::delete('/admin/table/{id}', [TableController::class, 'destroy'])->name('table.destroy');
 

@@ -25,7 +25,7 @@
         <br />
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
-    <a href="/admin" class="btn btn-info mt-3">Back to Dashboard</a>
+    <a href="/admin/tables" class="btn btn-info mt-3">Back to Table List</a>
 </div>
 
 @endsection
