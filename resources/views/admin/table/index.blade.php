@@ -18,8 +18,8 @@
             @method('PUT') 
             <label for="status-{{$table->id}}" class="form-label">Status:</label>
             <select id="status-{{$table->id}}" name="status" class="form-select w-50" style="margin: auto" onchange="this.form.submit()">
-                <option value="open" @selected($table->status == 'open' || $table->status == 'Open')>Open</option>
-                <option value="closed" @selected($table->status == 'closed' || $table->status == 'Closed')>Closed</option>
+                <option value="Open" @selected($table->status == 'open' || $table->status == 'Open')>Open</option>
+                <option value="Closed" @selected($table->status == 'closed' || $table->status == 'Closed')>Closed</option>
             </select>
         </form>
         <div>
