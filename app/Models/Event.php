@@ -9,8 +9,15 @@ class Event extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'description', 'date', 'max_participants'
+        'name',
+        'description',
+        'date',
+        'time',
+        'location',
+        'max_participants',
+        'image',
     ];
+    
 
     // Scope untuk event mendatang
     public function scopeUpcoming($query)

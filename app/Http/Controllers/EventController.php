@@ -25,13 +25,20 @@ class EventController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',
-            'max_participants' => 'integer|nullable',
+            'time' => 'required|string', 
+            'location' => 'required|string', 
+            'max_participants' => 'nullable|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
-
+        $path = $request->file(key: 'image')->storePublicly('photos', 'public');
+        $ext = $request->file('image')->extension();
+        $validatedData['image'] = $path;
         $event = Event::create($validatedData);
 
-        return redirect()->route('events.index')
-            ->with('success', 'Event berhasil dibuat');
+        // return redirect()->route('events.index')
+        //     ->with('success', 'Event berhasil dibuat');
+        return redirect('/admin');
+
     }
 
     public function register(Request $request, $eventId)

@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//TABLES
 Route::resource('tables', TableController::class);
 Route::resource('table-bookings', TableBookingController::class);
 
@@ -36,6 +37,14 @@ Route::put('/admin/table/{id}/change_image', [TableController::class, 'updateIma
 
 Route::delete('/admin/table/{id}', [TableController::class, 'destroy'])->name('table.destroy');
 
+// Event Routes
+// ADMIN
+Route::get('/admin/events', [EventController::class, 'index'])->name('event.index');
+Route::get('/admin/event/create_event', [AdminController::class, 'create_event'])->name('event.create');
+Route::post('/admin/event/create_event', [EventController::class, 'store'])->name('event.store');
+
+Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');
+
 // Authentication Routes
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
@@ -45,11 +54,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
 
-// Event Routes
-Route::get('/events', [EventController::class, 'index'])->name('events.index');
-Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
-Route::post('/events', [EventController::class, 'store'])->name('events.store');
-Route::post('/events/{event}/register', [EventController::class, 'register'])->name('events.register');
 
 // Product Routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');

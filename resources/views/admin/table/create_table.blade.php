@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="create-table-container w-50" style="margin: auto; background-color: #BAF4FF; padding: 20px; border-radius: 10px">
+<div class="create-table-container w-50 mb-3" style="margin: auto; background-color: #BAF4FF; padding: 20px; border-radius: 10px">
     <h1 class="text-center">Create Table</h1>
     <form class="form" action="/admin/table/create_table" method="post" enctype="multipart/form-data">
         @csrf
