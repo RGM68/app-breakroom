@@ -1,4 +1,5 @@
-@extends('layout.app')
+@extends('admin.layout.app')
+
 
 @section('title', 'Edit Table #' . $table->number)
 

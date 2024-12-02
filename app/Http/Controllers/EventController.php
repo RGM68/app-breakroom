@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -12,6 +13,15 @@ class EventController extends Controller
     {
         $events = Event::upcoming()->get();
         return view('events.index', compact('events'));
+    }
+
+    public function adminIndex()
+    {
+        $events = Event::orderBy('date', 'asc')->get();
+        foreach ($events as $event) {
+            $event->image_url = Storage::url($event->image);
+        }
+        return view('admin.event.index', compact('events'));
     }
 
     public function create()
@@ -40,6 +50,65 @@ class EventController extends Controller
         return redirect('/admin');
 
     }
+    public function show($id)
+    {
+        //
+        $event = Event::findOrFail($id);
+        $image = Storage::url($event->image);
+        return view('admin.event.show', [
+            'event' => $event,
+            'image' => $image
+        ]);
+    }
+
+    public function edit($id)
+    {
+        //
+        $event = Event::findOrFail($id);
+        $image = Storage::url($event->image);
+        return view('admin.event.edit', ['event' => $event, 'image' => $image]);
+    }
+
+    public function changeImage($id)
+    {
+        //
+        $event = Event::findOrFail($id);
+        $image = Storage::url($event->image);
+        return view('admin.event.change_image', ['event' => $event, 'image' => $image]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        //
+        $event = Event::findOrFail($id);
+        $event->name = $request->name;
+        $event->description = $request->description;
+        $event->date = $request->date;
+        $event->time = $request->time;
+        $event->location = $request->location;
+        $event->max_participants = $request->max_participants;
+        $event->save();
+
+        return redirect('/admin/events')->with('success', 'Event updated successfully!');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $event = Event::findOrFail($id);
+        $event->status = $request->input('status');
+        $event->save();
+    
+        return redirect('/admin/events')->with('success', 'Table updated successfully!');
+    }
+
+    public function updateImage(Request $request, $id){
+        $event = Event::findOrFail($id);
+        $path = $request->file('image')->storePublicly('photos', 'public');
+        $ext = $request->file('image')->extension();
+        $event->image = $path;
+        $event->save();
+        return redirect('/admin/events')->with('success', 'Event updated successfully!');
+    }
 
     public function register(Request $request, $eventId)
     {
@@ -54,6 +123,14 @@ class EventController extends Controller
         $event->participants()->attach($user->id);
 
         return back()->with('success', 'Registrasi event berhasil');
+    }
+
+    public function destroy($id)
+    {
+        //
+        $event = Event::findOrFail($id);
+        $event->delete();
+        return redirect('/admin/events');
     }
 }
 ?>

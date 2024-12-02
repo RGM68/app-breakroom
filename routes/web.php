@@ -39,10 +39,20 @@ Route::delete('/admin/table/{id}', [TableController::class, 'destroy'])->name('t
 
 // Event Routes
 // ADMIN
-Route::get('/admin/events', [EventController::class, 'index'])->name('event.index');
+Route::get('/admin/events', [EventController::class, 'adminIndex'])->name('event.adminIndex');
 Route::get('/admin/event/create_event', [AdminController::class, 'create_event'])->name('event.create');
 Route::post('/admin/event/create_event', [EventController::class, 'store'])->name('event.store');
 
+Route::get('/admin/event/{id}', [EventController::class, 'show'])->name('event.show');
+Route::put('/admin/event/{id}/status', [EventController::class, 'updateStatus'])->name('event.updateStatus');
+Route::get('/admin/event/{id}/edit', [EventController::class, 'edit'])->name('event.edit');
+Route::get('/admin/event/{id}/change_image', [EventController::class, 'changeImage'])->name('event.changeImage');
+Route::put('/admin/event/{id}', [EventController::class, 'update'])->name('event.update');
+Route::put('/admin/event/{id}/change_image', [EventController::class, 'updateImage'])->name('event.updateImage');
+
+Route::delete('/admin/event/{id}', [EventController::class, 'destroy'])->name('event.destroy');
+
+//USER
 Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');
 
 // Authentication Routes

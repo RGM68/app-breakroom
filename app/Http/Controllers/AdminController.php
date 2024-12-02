@@ -15,10 +15,10 @@ class AdminController extends Controller
     {
         //
         $tables = Table::orderBy('capacity', 'desc')->get();
-        $events = Event::orderBy('date', 'asc')->take(3)->get();
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }
+        $events = Event::orderBy('date', 'asc')->take(2)->get();
         foreach ($events as $event) {
             $event->image_url = Storage::url($event->image);
         }

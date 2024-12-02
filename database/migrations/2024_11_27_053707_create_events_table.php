@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->time('time');
             $table->string('location');
+            $table->string('status')->default('Open');
             $table->integer('max_participants');
             $table->string('image')->nullable();
             $table->timestamps();

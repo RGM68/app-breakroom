@@ -1,10 +1,10 @@
-@extends('layout.app')
+@extends('admin.layout.app')
 
 @section('title', 'Create New Event')
 
 @section('content')
 
-<div class="create-event-container w-50 mb-3" style="margin: auto; background-color: #ffa1ef; padding: 20px; border-radius: 10px">
+<div class="create-event-container w-75 mb-3" style="margin: auto; background-color: #ffa1ef; padding: 20px; border-radius: 10px">
     <h1 class="text-center">Create Event</h1>
     <form class="form" action="/admin/event/create_event" method="post" enctype="multipart/form-data">
         @csrf

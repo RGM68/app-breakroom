@@ -1,4 +1,5 @@
-@extends('layout.app')
+@extends('admin.layout.app')
+
 
 @section('title', 'Admin Tables Page')
 
@@ -7,7 +8,7 @@
 <h2>Tables</h2>
 <a href="/admin/table/create_table" class="btn btn-secondary mb-3">Create New table</a>
 <p><a href="{{route('admin.index')}}">Back to Dashboard</a></p>
-<div class="tables-container" style="display: flex; flex-wrap: wrap;">
+<div class="all-tables-container" style="display: flex; flex-wrap: wrap;">
 @foreach ($tables as $table)
     <div class="table-single text-center m-2" style="background-color: lightgrey; max-width: 400px; width: 400px; border-radius: 10px; padding: 10px">
         <h4 class="text-center">{{$table->number}}</h4>

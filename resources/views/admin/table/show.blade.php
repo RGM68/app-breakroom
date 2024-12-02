@@ -1,11 +1,11 @@
-@extends('layout.app')
+@extends('admin.layout.app')
 
 @section('title', 'Table #' . $table->number)
 
 @section('content')
 
-<div class="event-container" style="max-width:500px; margin: auto">
-    <div class="event-card text-center p-3" style="background-color: lightblue; border-radius: 10px">
+<div class="table-container" style="max-width:500px; margin: auto">
+    <div class="table-card text-center p-3" style="background-color: lightblue; border-radius: 10px">
         <h1>Table Details</h1>
         <img src="{{asset($image)}}"  style="width: 250px; border-radius: 10px"/><br />
         <p><strong>Table Number:</strong> {{ $table->number }}</p>
@@ -17,7 +17,6 @@
             red
         @endif
         ;font-weight: bolder">{{$table->status}}</p>
-        <div>
     </div>
     <a href="/admin/tables" class="btn btn-info mt-3">Back to Table List</a>
 </div>

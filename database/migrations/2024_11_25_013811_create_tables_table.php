@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tables', function (Blueprint $table) {
             $table->id();
             $table->integer('number');
-            $table->string('status')->default('open');
+            $table->string('status')->default('Open');
             $table->integer('capacity');
             $table->string('image')->nullable();
             $table->timestamps();
