@@ -25,12 +25,15 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'category' => 'required|in:food,drink,merchandise',
+            // 'category' => 'required|in:food,drink,merchandise',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
-
+        $path = $request->file(key: 'image')->storePublicly('photos', 'public');
+        $ext = $request->file('image')->extension();
+        $validatedData['image'] = $path;
         Product::create($validatedData);
 
-        return redirect()->route('products.index')
+        return redirect()->route('admin.index')
             ->with('success', 'Produk berhasil ditambahkan');
     }
 }

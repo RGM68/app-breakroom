@@ -11,7 +11,7 @@
         <label for="name" class="form-label">Name</label> 
         <input class="form-control" type="text" name="name" id="name" value="" required><br />
 
-        <label for="description" class="form-label">Description:</label>
+        <label for="description" class="form-label">Description</label>
         <textarea class="form-control" name="description" id="description"></textarea>
 
         <label for="date" class="form-label">Date</label> 
@@ -31,7 +31,7 @@
         <br />
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
-    <a href="/admin" class="btn btn-info mt-3">Back to Dashboard</a>
+    <a href="/admin/events" class="btn btn-info mt-3">Back to Event List</a>
 </div>
 
 @endsection

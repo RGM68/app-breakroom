@@ -38,7 +38,7 @@ Route::put('/admin/table/{id}/change_image', [TableController::class, 'updateIma
 Route::delete('/admin/table/{id}', [TableController::class, 'destroy'])->name('table.destroy');
 
 // Event Routes
-// ADMIN
+    // ADMIN
 Route::get('/admin/events', [EventController::class, 'adminIndex'])->name('event.adminIndex');
 Route::get('/admin/event/create_event', [AdminController::class, 'create_event'])->name('event.create');
 Route::post('/admin/event/create_event', [EventController::class, 'store'])->name('event.store');
@@ -52,8 +52,12 @@ Route::put('/admin/event/{id}/change_image', [EventController::class, 'updateIma
 
 Route::delete('/admin/event/{id}', [EventController::class, 'destroy'])->name('event.destroy');
 
-//USER
+    //USER
 Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');
+
+//Products
+Route::get('/admin/product/create_product', [AdminController::class, 'create_product'])->name('product.create');
+Route::post('/admin/product/create_product', [ProductController::class, 'store'])->name('product.create');
 
 // Authentication Routes
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Table;
 use App\Models\Event;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,7 +23,11 @@ class AdminController extends Controller
         foreach ($events as $event) {
             $event->image_url = Storage::url($event->image);
         }
-        return view('admin.index', ['tables' => $tables, 'events' => $events]);
+        $products = Product::orderBy('name', 'asc')->take(3)->get();
+        foreach ($products as $product) {
+            $product->image_url = Storage::url($product->image);
+        }
+        return view('admin.index', ['tables' => $tables, 'events' => $events, 'products' => $products]);
     }
 
     public function create_table()
@@ -35,5 +40,10 @@ class AdminController extends Controller
     {
         //
         return view('admin.event.create_event');
+    }
+    public function create_product()
+    {
+        //
+        return view('admin.product.create_product');
     }
 }

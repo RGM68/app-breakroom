@@ -47,7 +47,26 @@
 @endforeach
 </div>
 
-<h2>Products, Food, and Drinks</h2>
-<a href="#" class="btn btn-secondary mb-3">Create New Product</a>
+<h2>Products</h2>
+<a href="/admin/product/create_product" class="btn btn-secondary mb-3">Create New Product</a>
+<div class="products-container" 
+    style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
+@foreach ($products as $product)
+    <div class="product-single text-center m-2" style="background-color: #79e374; max-width: 400px; width: 400px; min-height: 300px; border-radius: 10px; padding: 10px;">
+        <h4 class="text-center">{{$product->name}}</h4>
+        <img src="{{$product->image_url}}" class="my-2" style="width: 250px; border-radius: 10px"/>
+        <p style="font-size: 30px; font-weight: bold">Rp. {{$product->price}}</p>
+        <p style="color: 
+        @if ($product->status == 'available' || $product->status == 'Available')
+            green 
+        @elseif ($product->status == 'unavailable' || $product->status == 'Unavailable')
+            red
+        @endif
+        ;font-weight: bolder">{{$product->status}}</p>
+    </div>
+@endforeach
+</div>
 
+<h2>Food and Drinks</h2>
+<a href="#" class="btn btn-secondary mb-3">Create New Food/Drink</a>
 @endsection
