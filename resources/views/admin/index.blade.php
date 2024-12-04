@@ -11,6 +11,7 @@
     <div class="table-single text-center m-2" style="background-color: lightgrey; max-width: 400px; width: 400px; border-radius: 10px; padding: 10px">
         <h4 class="text-center">{{$table->number}}</h4>
         <img src="{{$table->image_url}}" class="my-2" style="width: 100px; border-radius: 10px"/>
+        <p><b>Rp. {{$table->price}}</b>/hr</p>
         <p style="font-weight: bold">Capacity: {{$table->capacity}}</p>
         <p style="color: 
         @if ($table->status == 'open' || $table->status == 'Open')

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('number');
             $table->string('status')->default('Open');
             $table->integer('capacity');
+            $table->integer('price')->comment('per hour');
             $table->string('image')->nullable();
             $table->timestamps();
         });

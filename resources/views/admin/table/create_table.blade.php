@@ -20,6 +20,9 @@
         <br />
         <label for="capacity" class="form-label">Capacity</label> 
         <input class="form-control" type="number" name="capacity" id="capacity" value="" required><br />
+
+        <label for="price" class="form-label">Price (per hour)</label> 
+        <input class="form-control" type="number" name="price" id="price" value="" required><br />
         
         <label for="image" class="form-label">Image</label> 
         <input type="file" class="form-control" name="image" id="image" required> 

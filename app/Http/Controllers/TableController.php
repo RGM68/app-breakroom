@@ -42,6 +42,7 @@ class TableController extends Controller
         $table->number = $request->number;
         $table->status = $request->status;
         $table->capacity = $request->capacity;
+        $table->price = $request->price;
         $table->image = $path;
         $table->save();
         return redirect('/admin/tables');
@@ -90,6 +91,7 @@ class TableController extends Controller
         $table = Table::findOrFail($id);
         $table->number = $request->number;
         $table->capacity = $request->capacity;
+        $table->price = $request->price;
         $table->save();
 
         return redirect('/admin/tables')->with('success', 'Table updated successfully!');

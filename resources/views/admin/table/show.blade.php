@@ -10,6 +10,7 @@
         <img src="{{asset($image)}}"  style="width: 250px; border-radius: 10px"/><br />
         <p><strong>Table Number:</strong> {{ $table->number }}</p>
         <p><strong>Capacity:</strong> {{ $table->capacity }}</p>
+        <p>Price: <b>Rp. {{$table->price}}</b>/hr</p>
         <p style="color: 
         @if ($table->status == 'open' || $table->status == 'Open')
             green 

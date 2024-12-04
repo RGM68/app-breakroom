@@ -9,6 +9,13 @@ class Table extends Model
 {
     //
     use HasFactory;
+    protected $fillable = [
+        'number',
+        'status',
+        'capacity',
+        'price',
+        'image',
+    ];
     public function tableBookings(){
         return $this->hasMany(TableBooking::class);
     }

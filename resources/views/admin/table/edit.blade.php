@@ -19,6 +19,9 @@
         <label for="capacity" class="form-label">Capacity</label> 
         <input class="form-control" type="number" name="capacity" id="capacity" value="{{ $table->capacity }}" required>
         <br />
+        <label for="price" class="form-label">Price (per hour)</label> 
+        <input class="form-control" type="number" name="price" id="price" value="{{ $table->price }}" required>
+        <br />
         <button type="submit" class="btn btn-primary">Update Table</button>
     </form>
     <a href="/admin/tables" class="btn btn-info mt-3">Back to Table List</a>
