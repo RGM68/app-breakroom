@@ -59,6 +59,17 @@ Route::post('/events/{event}/register', [EventController::class, 'register'])->n
 Route::get('/admin/product/create_product', [AdminController::class, 'create_product'])->name('product.create');
 Route::post('/admin/product/create_product', [ProductController::class, 'store'])->name('product.create');
 
+Route::get('/admin/products', [ProductController::class, 'adminIndex'])->name('product.adminIndex');
+Route::get('/admin/product/{id}', [ProductController::class, 'show'])->name('product.show');
+
+Route::get('/admin/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
+Route::get('/admin/product/{id}/change_image', [ProductController::class, 'changeImage'])->name('product.changeImage');
+Route::put('/admin/product/{id}', [ProductController::class, 'update'])->name('product.update');
+Route::put('/admin/product/{id}/status', [ProductController::class, 'updateStatus'])->name('product.updateStatus');
+Route::put('/admin/product/{id}/change_image', [ProductController::class, 'updateImage'])->name('product.updateImage');
+
+Route::delete('/admin/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+
 // Authentication Routes
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);

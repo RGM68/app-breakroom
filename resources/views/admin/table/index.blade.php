@@ -15,6 +15,14 @@
         <img src="{{$table->image_url}}" class="my-2" style="width: 100px; border-radius: 10px"/>
         <p style="font-weight: bold">Capacity: {{$table->capacity}}</p>
         <p><b>Rp. {{$table->price}}</b>/hr</p>
+        <p style="color: 
+        @if ($table->status == 'open' || $table->status == 'Open')
+            green 
+        @else
+            red
+        @endif
+        ;font-weight: bolder">{{$table->status}}</p>
+        <hr />
         <form action="{{ route('table.updateStatus', $table->id) }}" method="POST" class="my-2">
             @csrf
             @method('PUT') 

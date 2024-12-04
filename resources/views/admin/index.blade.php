@@ -49,6 +49,7 @@
 </div>
 
 <h2>Products</h2>
+<p><a href="/admin/products">View All Products</a></p>
 <a href="/admin/product/create_product" class="btn btn-secondary mb-3">Create New Product</a>
 <div class="products-container" 
     style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">

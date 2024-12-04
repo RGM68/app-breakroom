@@ -15,6 +15,16 @@
         <img src="{{$event->image_url}}" class="my-2" style="width: 250px; height: fit-content; border-radius: 10px"/>
         <p style="font-weight: bold">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} {{ \Carbon\Carbon::parse($event->time)->format('H:i') }}</p>
         <p style="font-weight: bold">Max Participants: {{$event->max_participants}}</p>
+        <p style="color: 
+        @if ($event->status == 'open' || $event->status == 'Open')
+            green 
+        @elseif ($event->status == 'ongoing' || $event->status == 'Ongoing')
+            #e06900
+        @else
+            red
+        @endif
+        ;font-weight: bolder">{{$event->status}}</p>
+        <hr />
         <form action="{{ route('event.updateStatus', $event->id) }}" method="POST" class="my-2">
             @csrf
             @method('PUT') 
@@ -27,12 +37,12 @@
         </form>
         <div>
             <a href="/admin/event/{{$event->id}}" class="btn btn-primary me-1">View Details</a>
-            <a href="/admin/event/{{$event->id}}/edit" class="btn btn-warning">Edit Table</a>
+            <a href="/admin/event/{{$event->id}}/edit" class="btn btn-warning">Edit Event</a>
             <a href="/admin/event/{{$event->id}}/change_image" class="btn btn-success">Change Image</a>
             <form action="/admin/event/{{$event->id}}" method="post">
                 @method('DELETE')
                 @csrf
-                <button type="submit" class="btn btn-danger mt-2" onclick="return confirm('Delete?')">Delete Table</button>
+                <button type="submit" class="btn btn-danger mt-2" onclick="return confirm('Delete?')">Delete Event</button>
             </form>
         </div>
     </div>

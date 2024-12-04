@@ -7,7 +7,7 @@
 
 
 <div class="edit-event-container w-50" style="margin: auto; background-color: #BDCBFF; padding: 20px; border-radius: 10px">
-    <h1>Edit Event #{{$event->name}}</h1>
+    <h1>Edit Event {{$event->name}}</h1>
     <img src="{{asset(path: $image)}}" class="text-center my-2" style="width: 150px; border-radius: 10px"/><br />
     <form class="form" method="POST" action="/admin/event/{{ $event->id }}">
         @csrf
