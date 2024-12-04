@@ -59,9 +59,9 @@ class User extends Authenticatable
     }
 
     public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
+{
+    return $this->role_id === 1;
+}
 
     // di model User.php
     public function role()

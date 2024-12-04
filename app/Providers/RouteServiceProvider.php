@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AdminMiddleware;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRateLimiting();
+
+        $this->app['router']->aliasMiddleware('admin', AdminMiddleware::class);
 
         $this->routes(function () {
             Route::middleware('api')

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 
+
 class AuthController extends Controller
 {
     // Tampilkan form registrasi
@@ -80,7 +81,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Langsung cek role dari database
-            return $user->role === 'admin'
+            return $user->role_id === 1
                 ? redirect()->route('admin.dashboard')
                 : redirect()->route('user.dashboard');
         }
@@ -155,3 +156,4 @@ class AuthController extends Controller
         return redirect()->route('login')->with('status', 'Password berhasil direset');
     }
 }
+

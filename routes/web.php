@@ -5,6 +5,7 @@ use App\Http\Controllers\TableBookingController;
 use App\Http\Controllers\TableController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\EventController;
@@ -38,7 +39,7 @@ Route::put('/admin/table/{id}/change_image', [TableController::class, 'updateIma
 Route::delete('/admin/table/{id}', [TableController::class, 'destroy'])->name('table.destroy');
 
 // Event Routes
-    // ADMIN
+// ADMIN
 Route::get('/admin/events', [EventController::class, 'adminIndex'])->name('event.adminIndex');
 Route::get('/admin/event/create_event', [AdminController::class, 'create_event'])->name('event.create');
 Route::post('/admin/event/create_event', [EventController::class, 'store'])->name('event.store');
@@ -52,7 +53,7 @@ Route::put('/admin/event/{id}/change_image', [EventController::class, 'updateIma
 
 Route::delete('/admin/event/{id}', [EventController::class, 'destroy'])->name('event.destroy');
 
-    //USER
+//USER
 Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');
 
 //Products
@@ -135,4 +136,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // Waiting List Management
     Route::get('/waiting-list/manage', [WaitingListController::class, 'manage'])->name('admin.waiting-list.manage');
+
+    // Guest routes (no auth required)
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [AuthController::class, 'register']);
+    });
+
+    // Auth routes (require auth)
+    Route::middleware('auth')->group(function () {
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('admin');
+        Route::get('/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    });
 });
