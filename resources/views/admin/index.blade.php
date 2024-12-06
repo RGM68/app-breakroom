@@ -50,7 +50,6 @@
 
 <h2>Products</h2>
 <p><a href="/admin/products">View All Products</a></p>
-<a href="/admin/product/create_product" class="btn btn-secondary mb-3">Create New Product</a>
 <div class="products-container" 
     style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
 @foreach ($products as $product)
@@ -70,5 +69,23 @@
 </div>
 
 <h2>Food and Drinks</h2>
-<a href="#" class="btn btn-secondary mb-3">Create New Food/Drink</a>
+<p><a href="/admin/foods">View All Products</a></p>
+<div class="foods-container" 
+    style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
+@foreach ($foods as $food)
+    <div class="food-single text-center m-2" style="background-color: #e07b70; max-width: 400px; width: 400px; min-height: 300px; border-radius: 10px; padding: 10px;">
+        <h4 class="text-center">{{$food->name}}</h4>
+        <img src="{{$food->image_url}}" class="my-2" style="width: 250px; border-radius: 10px"/>
+        <p style="font-size: 28px; font-weight: bold">Rp. {{$food->price}}</p>
+        <p style="font-size: 18px; font-weight: bold">{{$food->category}}</p>
+        <p style="color: 
+        @if ($food->status == 'available' || $food->status == 'Available')
+            green 
+        @elseif ($food->status == 'unavailable' || $food->status == 'Unavailable')
+            red
+        @endif
+        ;font-weight: bolder">{{$food->status}}</p>
+    </div>
+@endforeach
+</div>
 @endsection

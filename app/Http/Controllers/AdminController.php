@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FoodAndDrink;
 use App\Models\Table;
 use App\Models\Event;
 use App\Models\Product;
@@ -27,7 +28,16 @@ class AdminController extends Controller
         foreach ($products as $product) {
             $product->image_url = Storage::url($product->image);
         }
-        return view('admin.index', ['tables' => $tables, 'events' => $events, 'products' => $products]);
+        $foods = FoodAndDrink::orderBy('name', 'asc')->take(3)->get();
+        foreach ($foods as $food) {
+            $food->image_url = Storage::url($food->image);
+        }
+        return view('admin.index', [
+            'tables' => $tables, 
+            'events' => $events, 
+            'products' => $products,
+            'foods' => $foods,
+        ]);
     }
 
     public function create_table()
@@ -45,5 +55,10 @@ class AdminController extends Controller
     {
         //
         return view('admin.product.create_product');
+    }
+    public function create_food()
+    {
+        //
+        return view('admin.food.create_food');
     }
 }

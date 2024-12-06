@@ -12,7 +12,7 @@
         <label for="number" class="form-label">Number</label> 
         <input class="form-control" type="number" name="number" id="number" value="" required><br />
     
-        <label for="status " class="form-label">Status</label> 
+        <label for="status" class="form-label">Status</label> 
         <select name="status" id="status" class="form-select" required>
             <option value="Open">Open</option>
             <option value="Closed">Closed</option>

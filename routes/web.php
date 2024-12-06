@@ -58,7 +58,7 @@ Route::post('/events/{event}/register', [EventController::class, 'register'])->n
 
 //Products
 Route::get('/admin/product/create_product', [AdminController::class, 'create_product'])->name('product.create');
-Route::post('/admin/product/create_product', [ProductController::class, 'store'])->name('product.create');
+Route::post('/admin/product/create_product', [ProductController::class, 'store'])->name('product.store');
 
 Route::get('/admin/products', [ProductController::class, 'adminIndex'])->name('product.adminIndex');
 Route::get('/admin/product/{id}', [ProductController::class, 'show'])->name('product.show');
@@ -70,6 +70,21 @@ Route::put('/admin/product/{id}/status', [ProductController::class, 'updateStatu
 Route::put('/admin/product/{id}/change_image', [ProductController::class, 'updateImage'])->name('product.updateImage');
 
 Route::delete('/admin/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+
+//FOODS
+Route::get('/admin/food/create_food', [AdminController::class, 'create_food'])->name('food.create');
+Route::post('/admin/food/create_food', [FoodAndDrinkController::class, 'store'])->name('food.store');
+
+Route::get('/admin/foods', [FoodAndDrinkController::class, 'adminIndex'])->name('food.adminIndex');
+Route::get('/admin/food/{id}', [FoodAndDrinkController::class, 'show'])->name('food.show');
+
+Route::get('/admin/food/{id}/edit', [FoodAndDrinkController::class, 'edit'])->name('food.edit');
+Route::get('/admin/food/{id}/change_image', [FoodAndDrinkController::class, 'changeImage'])->name('food.changeImage');
+Route::put('/admin/food/{id}', [FoodAndDrinkController::class, 'update'])->name('food.update');
+Route::put('/admin/food/{id}/status', [FoodAndDrinkController::class, 'updateStatus'])->name('food.updateStatus');
+Route::put('/admin/food/{id}/change_image', [FoodAndDrinkController::class, 'updateImage'])->name('food.updateImage');
+
+Route::delete('/admin/food/{id}', [FoodAndDrinkController::class, 'destroy'])->name('food.destroy');
 
 // Authentication Routes
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
