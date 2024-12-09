@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Email Verification - Breakroom</title>
     <style>
@@ -11,6 +12,7 @@
             margin: 0 auto;
             padding: 20px;
         }
+
         .otp-code {
             font-size: 24px;
             font-weight: bold;
@@ -21,6 +23,7 @@
             border: 2px solid #2563eb;
             border-radius: 5px;
         }
+
         .warning {
             color: #666;
             font-size: 14px;
@@ -28,13 +31,15 @@
         }
     </style>
 </head>
+
 <body>
     <h2>Welcome to Breakroom!</h2>
     <p>Hello!</p>
     <p>Thank you for registering. To complete your registration, please use the following verification code:</p>
-    
-    <div class="otp-code">
-        {{ $otp }}
+
+    <div>
+        <h2>Verify Your Email</h2>
+        <p>Your verification code is: {{ $verificationCode }}</p>
     </div>
 
     <p>This code will expire in 10 minutes for security purposes.</p>
@@ -45,4 +50,5 @@
 
     <p>Best regards,<br>The Breakroom Team</p>
 </body>
+
 </html>

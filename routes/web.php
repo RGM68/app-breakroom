@@ -51,7 +51,7 @@ Route::middleware(['web'])->group(function () {
 
 
 // Protected Routes
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'email.verified'])->group(function () {
     Route::get('/dashboard', function () {
         if (Auth::user()->role_id == 1) {
             return redirect()->route('admin.dashboard');
@@ -159,3 +159,6 @@ Route::post('/products', [ProductController::class, 'store'])->name('products.st
 Route::get('/bookings/check', [BookingController::class, 'checkAvailability'])->name('bookings.check');
 Route::post('/bookings', [BookingController::class, 'book'])->name('bookings.book');
 Route::get('/bookings/history', [BookingController::class, 'history'])->name('bookings.history');
+
+
+Route::post('/email/resend', [AuthController::class, 'resendVerification'])->name('verification.resend');
