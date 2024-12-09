@@ -48,6 +48,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Existing relationships
     public function tableBookings()
     {
         return $this->hasMany(TableBooking::class);
@@ -59,13 +61,18 @@ class User extends Authenticatable
     }
 
     public function isAdmin()
-{
-    return $this->role_id === 1;
-}
+    {
+        return $this->role_id === 1;
+    }
 
-    // di model User.php
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    // Add this new relationship for OTP codes
+    public function otpCodes()
+    {
+        return $this->hasMany(OtpCode::class);
     }
 }

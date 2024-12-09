@@ -43,6 +43,11 @@
 </style>
 
 <body>
+<!-- <div class="text-black">
+    Authenticated: {{ Auth::check() ? 'Yes' : 'No' }}<br>
+    Guest: {{ Auth::guest() ? 'Yes' : 'No' }}
+</div> -->
+
     <div class="relative h-screen">
         <div class="video-container">
             <video autoplay muted loop playsinline class="video-background">
@@ -55,17 +60,16 @@
             <p class="text-lg md:text-xl mb-8 text-center max-w-2xl">Experience premium billiards in a sophisticated
                 atmosphere</p>
             <div class="button-container flex space-x-4 md:space-x-6">
-                @auth
-                    <a href="{{ route('bookings.check') }}"
-                        class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold text-center">Book
-                        a Table</a>
-                @else
+                @if (true) {{-- Always render this block for testing --}}
                     <a href="{{ route('login') }}"
-                        class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold text-center">Login</a>
+                        class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold text-center">
+                        Login
+                    </a>
                     <a href="{{ route('register') }}"
-                        class="w-full md:w-auto bg-transparent border-2 border-white hover:bg-white hover:text-black px-6 py-3 rounded-lg font-semibold text-center">Sign
-                        Up</a>
-                @endauth
+                        class="w-full md:w-auto bg-transparent border-2 border-white hover:bg-white hover:text-black px-6 py-3 rounded-lg font-semibold text-center">
+                        Sign Up
+                    </a>
+                @endif
             </div>
         </div>
     </div>
