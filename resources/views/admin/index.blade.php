@@ -1,91 +1,242 @@
 @extends('admin.layout.app')
 
-@section('title', 'Admin Home Page')
+@section('title', 'Admin Dashboard')
 
-@section(section: 'content')
-    
-<h2>Tables</h2>
-<p><a href="{{route('admin.table.index')}}">View All Tables</a></p>
-<div class="tables-container" style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;;">
-@foreach ($tables as $table)
-    <div class="table-single text-center m-2" style="background-color: lightgrey; max-width: 400px; width: 400px; border-radius: 10px; padding: 10px">
-        <h4 class="text-center">{{$table->number}}</h4>
-        <img src="{{$table->image_url}}" class="my-2" style="width: 100px; border-radius: 10px"/>
-        <p><b>Rp. {{$table->price}}</b>/hr</p>
-        <p style="font-weight: bold">Capacity: {{$table->capacity}}</p>
-        <p style="color: 
-        @if ($table->status == 'open' || $table->status == 'Open')
-            green 
-        @else
-            red
-        @endif
-        ;font-weight: bolder">{{$table->status}}</p>
-       
+@push('styles')
+    @vite(['resources/css/animations.css'])
+@endpush
+
+@section('content')
+<div class="container mx-auto p-4 bg-gray-50 min-h-screen">
+    <!-- Quick Action Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        @php
+            $quickActions = [
+                ['title' => 'Tables', 'desc' => 'Manage all tables', 'color' => 'blue', 'route' => 'admin.table.index'],
+                ['title' => 'Events', 'desc' => 'Organize and manage events', 'color' => 'purple', 'route' => 'admin.event.adminIndex'],
+                ['title' => 'Products', 'desc' => 'Manage product inventory', 'color' => 'green', 'route' => 'admin.product.adminIndex'],
+                ['title' => 'Food & Drinks', 'desc' => 'Manage menu items', 'color' => 'red', 'route' => 'admin.food.adminIndex']
+            ];
+        @endphp
+
+        @foreach($quickActions as $index => $action)
+            <div class="bg-{{$action['color']}}-50 hover:bg-{{$action['color']}}-100 transition-all duration-300 rounded-xl shadow-md p-6 hover-lift fade-in-up"
+                style="animation-delay: {{$index * 100}}ms">
+                <h3 class="font-bold text-xl mb-3 text-{{$action['color']}}-700">{{$action['title']}}</h3>
+                <p class="text-gray-600 mb-4">{{$action['desc']}}</p>
+                <a href="{{route($action['route'])}}"
+                    class="group inline-flex items-center text-{{$action['color']}}-600 hover:text-{{$action['color']}}-800 font-semibold">
+                    View All
+                    <span class="ml-2 transform transition-transform duration-300 group-hover:translate-x-2">→</span>
+                </a>
+            </div>
+        @endforeach
     </div>
-@endforeach
+
+    <!-- Tables Section -->
+    <div class="bg-white rounded-xl shadow-lg mb-8 p-6 hover-lift slide-in">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Tables Overview</h2>
+            <a href="{{route('admin.table.index')}}" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-all duration-300 
+                      transform hover:scale-105 hover:shadow-lg inline-flex items-center gap-2">
+                Manage Tables
+                <span class="transform transition-transform group-hover:translate-x-1">→</span>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            @foreach ($tables as $index => $table)
+                <div class="border rounded-xl p-4 hover-lift fade-in-up 
+                            @if($table->status == 'Open') bg-green-50 hover:bg-green-100 
+                            @else bg-red-50 hover:bg-red-100 @endif" style="animation-delay: {{$index * 100}}ms">
+                    <div class="flex justify-between items-start mb-3">
+                        <h4 class="font-bold text-lg">Table {{$table->number}}</h4>
+                        <span class="px-3 py-1 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105
+                            @if($table->status == 'Open') 
+                                bg-green-200 text-green-800 hover:bg-green-300
+                            @else 
+                                bg-red-200 text-red-800 hover:bg-red-300
+                            @endif">
+                            {{$table->status}}
+                        </span>
+                    </div>
+                    <div class="overflow-hidden rounded-lg mb-3">
+                        <img src="{{$table->image_url}}" alt="Table {{$table->number}}"
+                            class="w-full h-32 object-cover transform transition-transform duration-300 hover:scale-110" />
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="font-bold text-gray-700">Rp. {{number_format($table->price)}}/hr</p>
+                        <p class="text-gray-600">Capacity: {{$table->capacity}}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Events Section -->
+    <div class="bg-white rounded-xl shadow-lg mb-8 p-6 hover-lift slide-in" style="animation-delay: 200ms">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Upcoming Events</h2>
+            <a href="{{route('admin.event.adminIndex')}}" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-all duration-300 
+                      transform hover:scale-105 hover:shadow-lg inline-flex items-center gap-2">
+                Manage Events
+                <span class="transform transition-transform group-hover:translate-x-1">→</span>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @foreach ($events as $index => $event)
+                <div class="border rounded-xl overflow-hidden hover-lift fade-in-up"
+                    style="animation-delay: {{($index + 4) * 100}}ms">
+                    <div class="overflow-hidden">
+                        <img src="{{$event->image_url}}" alt="{{$event->name}}"
+                            class="w-full h-48 object-cover transform transition-transform duration-300 hover:scale-110" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-bold text-xl mb-2">{{$event->name}}</h4>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105
+                                @if($event->status == 'Open') 
+                                    bg-green-200 text-green-800 hover:bg-green-300
+                                @elseif($event->status == 'Ongoing')
+                                    bg-yellow-200 text-yellow-800 hover:bg-yellow-300
+                                @else
+                                    bg-red-200 text-red-800 hover:bg-red-300
+                                @endif">
+                                {{$event->status}}
+                            </span>
+                        </div>
+                        <p class="text-gray-600 mb-2">
+                            {{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} at
+                            {{ \Carbon\Carbon::parse($event->time)->format('H:i') }}
+                        </p>
+                        <p class="text-gray-700 mb-3">{{$event->description}}</p>
+                        <div class="flex justify-between items-center">
+                            <p class="font-semibold text-purple-600">Max: {{$event->max_participants}} participants</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Products and F&B Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Products Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover-lift slide-in" style="animation-delay: 300ms">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    Products
+                </h2>
+                <a href="{{route('admin.product.adminIndex')}}" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg 
+                      transition-all duration-300 transform hover:scale-105 hover:shadow-lg 
+                      inline-flex items-center gap-2">
+                    Manage Products
+                    <span class="transform transition-transform group-hover:translate-x-1">→</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                @foreach ($products as $index => $product)
+                    <div class="border rounded-xl p-4 hover-lift fade-in-up bg-white hover:bg-gray-50 
+                          transition-all duration-300" style="animation-delay: {{($index + 8) * 100}}ms">
+                        <div class="overflow-hidden rounded-lg mb-3">
+                            <img src="{{$product->image_url}}" alt="{{$product->name}}" class="w-full h-32 object-cover transform transition-transform 
+                                    duration-300 hover:scale-110" />
+                        </div>
+                        <h4 class="font-bold text-lg text-gray-800 mb-2">{{$product->name}}</h4>
+                        <p class="text-lg font-bold text-green-600 mb-2">
+                            Rp. {{number_format($product->price)}}
+                        </p>
+                        <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold 
+                               transition-all duration-300 hover:scale-105
+                        @if($product->status == 'Available') 
+                            bg-green-200 text-green-800 hover:bg-green-300
+                        @else
+                            bg-red-200 text-red-800 hover:bg-red-300
+                        @endif">
+                            {{$product->status}}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Food & Drinks Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover-lift slide-in" style="animation-delay: 400ms">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h18v18H3zM3 9h18M9 21V9" />
+                    </svg>
+                    Food & Drinks
+                </h2>
+                <a href="{{route('admin.food.adminIndex')}}" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg 
+                      transition-all duration-300 transform hover:scale-105 hover:shadow-lg 
+                      inline-flex items-center gap-2">
+                    Manage Menu
+                    <span class="transform transition-transform group-hover:translate-x-1">→</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                @foreach ($foods as $index => $food)
+                    <div class="border rounded-xl p-4 hover-lift fade-in-up bg-white hover:bg-gray-50 
+                          transition-all duration-300" style="animation-delay: {{($index + 12) * 100}}ms">
+                        <div class="overflow-hidden rounded-lg mb-3">
+                            <img src="{{$food->image_url}}" alt="{{$food->name}}" class="w-full h-32 object-cover transform transition-transform 
+                                    duration-300 hover:scale-110" />
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-lg text-gray-800">{{$food->name}}</h4>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 bg-gray-100 rounded-md text-sm text-gray-600">
+                                    {{$food->category}}
+                                </span>
+                            </div>
+                            <p class="text-lg font-bold text-red-600">
+                                Rp. {{number_format($food->price)}}
+                            </p>
+                            <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold 
+                                   transition-all duration-300 hover:scale-105
+                            @if($food->status == 'Available') 
+                                bg-green-200 text-green-800 hover:bg-green-300
+                            @else
+                                bg-red-200 text-red-800 hover:bg-red-300
+                            @endif">
+                                {{$food->status}}
+                            </span>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 </div>
 
-<h2>Events</h2>
-<p><a href="{{route('admin.event.adminIndex')}}">View All Events</a></p>
-<div class="events-container" 
-    style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
-@foreach ($events as $event)
-    <div class="event-single text-center m-2" style="background-color: #d9abd1; max-width: 600px; width: 600px; min-height: 400px; border-radius: 10px; padding: 10px;">
-        <h4 class="text-center">{{$event->name}}</h4>
-        <img src="{{$event->image_url}}" class="my-2" style="width: 250px; border-radius: 10px"/>
-        <p style="font-weight: bold">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} {{ \Carbon\Carbon::parse($event->time)->format('H:i') }}</p>
-        <p style="font-weight: bold">Max Participants: {{$event->max_participants}}</p>
-        <p style="color: 
-        @if ($event->status == 'open' || $event->status == 'Open')
-            green 
-        @elseif ($event->status == 'ongoing' || $event->status == 'Ongoing')
-            #e06900
-        @else
-            red
-        @endif
-        ;font-weight: bolder">{{$event->status}}</p>
-    </div>
-@endforeach
-</div>
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
 
-<h2>Products</h2>
-<p><a href="{{route('admin.product.adminIndex')}}">View All Products</a></p>
-<div class="products-container" 
-    style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
-@foreach ($products as $product)
-    <div class="product-single text-center m-2" style="background-color: #79e374; max-width: 400px; width: 400px; min-height: 300px; border-radius: 10px; padding: 10px;">
-        <h4 class="text-center">{{$product->name}}</h4>
-        <img src="{{$product->image_url}}" class="my-2" style="width: 250px; border-radius: 10px"/>
-        <p style="font-size: 30px; font-weight: bold">Rp. {{$product->price}}</p>
-        <p style="color: 
-        @if ($product->status == 'available' || $product->status == 'Available')
-            green 
-        @elseif ($product->status == 'unavailable' || $product->status == 'Unavailable')
-            red
-        @endif
-        ;font-weight: bolder">{{$product->status}}</p>
-    </div>
-@endforeach
-</div>
-
-<h2>Food and Drinks</h2>
-<p><a href="{{route('admin.food.adminIndex')}}">View All Foods</a></p>
-<div class="foods-container" 
-    style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
-@foreach ($foods as $food)
-    <div class="food-single text-center m-2" style="background-color: #e07b70; max-width: 400px; width: 400px; min-height: 300px; border-radius: 10px; padding: 10px;">
-        <h4 class="text-center">{{$food->name}}</h4>
-        <img src="{{$food->image_url}}" class="my-2" style="width: 250px; border-radius: 10px"/>
-        <p style="font-size: 28px; font-weight: bold">Rp. {{$food->price}}</p>
-        <p style="font-size: 18px; font-weight: bold">{{$food->category}}</p>
-        <p style="color: 
-        @if ($food->status == 'available' || $food->status == 'Available')
-            green 
-        @elseif ($food->status == 'unavailable' || $food->status == 'Unavailable')
-            red
-        @endif
-        ;font-weight: bolder">{{$food->status}}</p>
-    </div>
-@endforeach
-</div>
+            // Observe all animated elements
+            document.querySelectorAll('.fade-in-up, .slide-in').forEach((el) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                observer.observe(el);
+            });
+        });
+    </script>
+@endpush
 @endsection
