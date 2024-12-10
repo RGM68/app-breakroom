@@ -183,4 +183,6 @@ Route::post('/products', [ProductController::class, 'store'])->name('products.st
 Route::get('/bookings/check', [BookingController::class, 'checkAvailability'])->name('bookings.check');
 Route::post('/bookings', [BookingController::class, 'book'])->name('bookings.book');
 Route::get('/bookings/history', [BookingController::class, 'history'])->name('bookings.history');
+Route::get('/events', [EventController::class, 'index'])->name('event.index');
+Route::get('/events/{id}', [EventController::class, 'details'])->name('event.details');
 

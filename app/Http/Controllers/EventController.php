@@ -12,7 +12,13 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::upcoming()->get();
-        return view('events.index', compact('events'));
+        return view('user.events.index', compact('events'));
+    }
+
+    public function details($id)
+    {
+        $event = Event::findOrFail($id);
+        return view('user.events.details', compact('event'));
     }
 
     public function adminIndex()
@@ -47,7 +53,8 @@ class EventController extends Controller
 
         // return redirect()->route('events.index')
         //     ->with('success', 'Event berhasil dibuat');
-        return redirect('/admin');
+        return redirect()->route('admin.event.index')
+        ->with('success', 'Event berhasil dibuat');
 
     }
     public function show($id)

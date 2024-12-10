@@ -11,8 +11,25 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
-        return view('products.index', compact('products'));
+        $products = Product::where('status', 'Available')
+                      ->orderBy('created_at', 'desc')
+                      ->paginate(12); // 12 items per page
+        return view('user.products.index', compact('products'));
+    }
+
+    public function details($id) 
+    {
+        //mencari produk berdasarkan id
+        $product = Product::findOrFail($id);
+    
+        //mengambil url gambar dari storage
+        $image = Storage::url($product->image);
+
+        //mengirim data ke view user
+        return view('user.products.details', [
+            'product' => $product,
+            'image' => $image
+        ]);
     }
 
     public function adminIndex()
