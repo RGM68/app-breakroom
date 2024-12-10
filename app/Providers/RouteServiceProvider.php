@@ -27,7 +27,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
-        $this->app['router']->aliasMiddleware('admin', AdminMiddleware::class);
+        // $this->app['router']->aliasMiddleware('admin', AdminMiddleware::class);
 
         $this->routes(function () {
             Route::middleware('api')

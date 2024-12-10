@@ -68,7 +68,7 @@ Route::middleware(['web'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         if (Auth::user()->role_id == 1) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('admin.index');
         }
         return view('user.dashboard');
     })->name('dashboard');
@@ -79,70 +79,72 @@ Route::resource('tables', TableController::class);
 Route::resource('table-bookings', TableBookingController::class);
 
 // Admin Routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    
-    // Tables
-    Route::get('/table/create_table', [AdminController::class, 'create_table']);
-    Route::post('/table/create_table', [TableController::class, 'store']);
-    Route::get('/tables', [TableController::class, 'index'])->name('table.index');
-    Route::get('/table/{id}', [TableController::class, 'show'])->name('table.show');
-    Route::get('/table/{id}/edit', [TableController::class, 'edit'])->name('table.edit');
-    Route::get('/table/{id}/change_image', [TableController::class, 'changeImage'])->name('table.changeImage');
-    Route::put('/table/{id}', [TableController::class, 'update'])->name('table.update');
-    Route::put('/table/{id}/status', [TableController::class, 'updateStatus'])->name('table.updateStatus');
-    Route::put('/table/{id}/change_image', [TableController::class, 'updateImage'])->name('table.updateImage');
-    Route::delete('/table/{id}', [TableController::class, 'destroy'])->name('table.destroy');
-    Route::get('/tables/status', [TableController::class, 'status'])->name('admin.tables.status');
-    Route::put('/tables/{table}/update-status', [TableController::class, 'updateStatus'])->name('admin.tables.update-status');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
 
-    // Events
-    Route::get('/events', [EventController::class, 'adminIndex'])->name('event.adminIndex');
-    Route::get('/event/create_event', [AdminController::class, 'create_event'])->name('event.create');
-    Route::post('/event/create_event', [EventController::class, 'store'])->name('event.store');
-    Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
-    Route::put('/event/{id}/status', [EventController::class, 'updateStatus'])->name('event.updateStatus');
-    Route::get('/event/{id}/edit', [EventController::class, 'edit'])->name('event.edit');
-    Route::get('/event/{id}/change_image', [EventController::class, 'changeImage'])->name('event.changeImage');
-    Route::put('/event/{id}', [EventController::class, 'update'])->name('event.update');
-    Route::put('/event/{id}/change_image', [EventController::class, 'updateImage'])->name('event.updateImage');
-    Route::delete('/event/{id}', [EventController::class, 'destroy'])->name('event.destroy');
-    Route::get('/events/manage', [EventController::class, 'manage'])->name('admin.events.manage');
+        // Tables
+        Route::get('/table/create_table', [AdminController::class, 'create_table']);
+        Route::post('/table/create_table', [TableController::class, 'store']);
+        Route::get('/tables', [TableController::class, 'index'])->name('table.index');
+        Route::get('/table/{id}', [TableController::class, 'show'])->name('table.show');
+        Route::get('/table/{id}/edit', [TableController::class, 'edit'])->name('table.edit');
+        Route::get('/table/{id}/change_image', [TableController::class, 'changeImage'])->name('table.changeImage');
+        Route::put('/table/{id}', [TableController::class, 'update'])->name('table.update');
+        Route::put('/table/{id}/status', [TableController::class, 'updateStatus'])->name('table.updateStatus');
+        Route::put('/table/{id}/change_image', [TableController::class, 'updateImage'])->name('table.updateImage');
+        Route::delete('/table/{id}', [TableController::class, 'destroy'])->name('table.destroy');
+        Route::get('/tables/status', [TableController::class, 'status'])->name('admin.tables.status');
+        Route::put('/tables/{table}/update-status', [TableController::class, 'updateStatus'])->name('admin.tables.update-status');
 
-    // Products
-    Route::get('/product/create_product', [AdminController::class, 'create_product'])->name('product.create');
-    Route::post('/product/create_product', [ProductController::class, 'store'])->name('product.store');
-    Route::get('/products', [ProductController::class, 'adminIndex'])->name('product.adminIndex');
-    Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
-    Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
-    Route::get('/product/{id}/change_image', [ProductController::class, 'changeImage'])->name('product.changeImage');
-    Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
-    Route::put('/product/{id}/status', [ProductController::class, 'updateStatus'])->name('product.updateStatus');
-    Route::put('/product/{id}/change_image', [ProductController::class, 'updateImage'])->name('product.updateImage');
-    Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
-    Route::get('/products/manage', [ProductController::class, 'manage'])->name('admin.products.manage');
+        // Events
+        Route::get('/events', [EventController::class, 'adminIndex'])->name('event.adminIndex');
+        Route::get('/event/create_event', [AdminController::class, 'create_event'])->name('event.create');
+        Route::post('/event/create_event', [EventController::class, 'store'])->name('event.store');
+        Route::get('/event/{id}', [EventController::class, 'show'])->name('event.show');
+        Route::put('/event/{id}/status', [EventController::class, 'updateStatus'])->name('event.updateStatus');
+        Route::get('/event/{id}/edit', [EventController::class, 'edit'])->name('event.edit');
+        Route::get('/event/{id}/change_image', [EventController::class, 'changeImage'])->name('event.changeImage');
+        Route::put('/event/{id}', [EventController::class, 'update'])->name('event.update');
+        Route::put('/event/{id}/change_image', [EventController::class, 'updateImage'])->name('event.updateImage');
+        Route::delete('/event/{id}', [EventController::class, 'destroy'])->name('event.destroy');
+        Route::get('/events/manage', [EventController::class, 'manage'])->name('admin.events.manage');
 
-    // Foods
-    Route::get('/food/create_food', [AdminController::class, 'create_food'])->name('food.create');
-    Route::post('/food/create_food', [FoodAndDrinkController::class, 'store'])->name('food.store');
-    Route::get('/foods', [FoodAndDrinkController::class, 'adminIndex'])->name('food.adminIndex');
-    Route::get('/food/{id}', [FoodAndDrinkController::class, 'show'])->name('food.show');
-    Route::get('/food/{id}/edit', [FoodAndDrinkController::class, 'edit'])->name('food.edit');
-    Route::get('/food/{id}/change_image', [FoodAndDrinkController::class, 'changeImage'])->name('food.changeImage');
-    Route::put('/food/{id}', [FoodAndDrinkController::class, 'update'])->name('food.update');
-    Route::put('/food/{id}/status', [FoodAndDrinkController::class, 'updateStatus'])->name('food.updateStatus');
-    Route::put('/food/{id}/change_image', [FoodAndDrinkController::class, 'updateImage'])->name('food.updateImage');
-    Route::delete('/food/{id}', [FoodAndDrinkController::class, 'destroy'])->name('food.destroy');
-    Route::get('/food-and-drinks/manage', [FoodAndDrinkController::class, 'manage'])->name('admin.food-and-drinks.manage');
+        // Products
+        Route::get('/product/create_product', [AdminController::class, 'create_product'])->name('product.create');
+        Route::post('/product/create_product', [ProductController::class, 'store'])->name('product.store');
+        Route::get('/products', [ProductController::class, 'adminIndex'])->name('product.adminIndex');
+        Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
+        Route::get('/product/{id}/edit', [ProductController::class, 'edit'])->name('product.edit');
+        Route::get('/product/{id}/change_image', [ProductController::class, 'changeImage'])->name('product.changeImage');
+        Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+        Route::put('/product/{id}/status', [ProductController::class, 'updateStatus'])->name('product.updateStatus');
+        Route::put('/product/{id}/change_image', [ProductController::class, 'updateImage'])->name('product.updateImage');
+        Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+        Route::get('/products/manage', [ProductController::class, 'manage'])->name('admin.products.manage');
 
-    // User Management
-    Route::get('/users', [AdminController::class, 'userList'])->name('admin.users.index');
-    Route::get('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('admin.users.reset-password');
+        // Foods
+        Route::get('/food/create_food', [AdminController::class, 'create_food'])->name('food.create');
+        Route::post('/food/create_food', [FoodAndDrinkController::class, 'store'])->name('food.store');
+        Route::get('/foods', [FoodAndDrinkController::class, 'adminIndex'])->name('food.adminIndex');
+        Route::get('/food/{id}', [FoodAndDrinkController::class, 'show'])->name('food.show');
+        Route::get('/food/{id}/edit', [FoodAndDrinkController::class, 'edit'])->name('food.edit');
+        Route::get('/food/{id}/change_image', [FoodAndDrinkController::class, 'changeImage'])->name('food.changeImage');
+        Route::put('/food/{id}', [FoodAndDrinkController::class, 'update'])->name('food.update');
+        Route::put('/food/{id}/status', [FoodAndDrinkController::class, 'updateStatus'])->name('food.updateStatus');
+        Route::put('/food/{id}/change_image', [FoodAndDrinkController::class, 'updateImage'])->name('food.updateImage');
+        Route::delete('/food/{id}', [FoodAndDrinkController::class, 'destroy'])->name('food.destroy');
+        Route::get('/food-and-drinks/manage', [FoodAndDrinkController::class, 'manage'])->name('admin.food-and-drinks.manage');
 
-    // Waiting List
-    Route::get('/waiting-list/manage', [WaitingListController::class, 'manage'])->name('admin.waiting-list.manage');
+        // User Management
+        Route::get('/users', [AdminController::class, 'userList'])->name('admin.users.index');
+        Route::get('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('admin.users.reset-password');
+
+        // Waiting List
+        Route::get('/waiting-list/manage', [WaitingListController::class, 'manage'])->name('admin.waiting-list.manage');
+    });
 });
+
 
 // User Routes
 Route::middleware(['auth'])->group(function () {
