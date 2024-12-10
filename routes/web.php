@@ -29,17 +29,31 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Email Verification Routes
+// Route::middleware('auth')->group(function () {
+//     Route::get('/email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
+//     Route::post('/email/verify', [VerificationController::class, 'verify'])->name('verification.verify');
+//     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+//     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// });
+
 // Email Verification Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
-    Route::post('/email/verify', [VerificationController::class, 'verify'])->name('verification.verify');
-    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/email/verify', [VerificationController::class, 'notice'])
+        ->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->name('verification.verify');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])
+        ->name('verification.resend');
 });
+// Route::get('/otp/verify', [VerificationController::class, 'notice'])->name('otp.verify');
+// Route::post('/otp/verify', [VerificationController::class, 'verify'])->name('otp.verify.post');
 
-Route::get('/otp/verify', [VerificationController::class, 'notice'])->name('otp.verify');
-Route::post('/otp/verify', [VerificationController::class, 'verify'])->name('otp.verify.post');
-
+Route::get('/otp/verify', [AuthController::class, 'showVerificationForm'])->name('otp.verify');
+Route::post('/otp/verify', [AuthController::class, 'verify'])->name('otp.verify.post');
+Route::post('/email/resend', [AuthController::class, 'resendVerification'])->name('verification.resend');
 
 Route::middleware(['web'])->group(function () {
     // Public routes
@@ -51,12 +65,12 @@ Route::middleware(['web'])->group(function () {
 
 
 // Protected Routes
-Route::middleware(['auth', 'email.verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         if (Auth::user()->role_id == 1) {
             return redirect()->route('admin.dashboard');
         }
-        return view('dashboard');
+        return view('user.dashboard');
     })->name('dashboard');
 });
 
@@ -160,5 +174,3 @@ Route::get('/bookings/check', [BookingController::class, 'checkAvailability'])->
 Route::post('/bookings', [BookingController::class, 'book'])->name('bookings.book');
 Route::get('/bookings/history', [BookingController::class, 'history'])->name('bookings.history');
 
-
-Route::post('/email/resend', [AuthController::class, 'resendVerification'])->name('verification.resend');

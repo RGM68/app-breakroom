@@ -49,7 +49,12 @@ class VerificationController extends Controller
 
             DB::commit();
 
-            return redirect()->route('dashboard')->with('success', 'Email verified successfully');
+            // Log the user out
+            Auth::logout();
+
+            // Redirect to login with success message
+            return redirect()->route('login')
+                ->with('success', 'Email verified successfully. Please login to continue.');
 
         } catch (\Exception $e) {
             DB::rollBack();

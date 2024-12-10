@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Mail\VerificationMail;
+use Illuminate\Support\Facades\Log;
+
 
 class AuthController extends Controller
 {
@@ -66,14 +68,12 @@ class AuthController extends Controller
             'verification_code' => $verificationCode
         ]);
 
-        // Generate OTP
-        $otp = sprintf("%06d", mt_rand(1, 999999));
-
         // Store OTP
         OtpCode::create([
             'user_id' => $user->id,
-            'code' => $verificationCode,  // Changed from $otp
+            'code' => $verificationCode,
             'expires_at' => Carbon::now()->addMinutes(10),
+            'is_used' => false  // Add this since your table has is_used column
         ]);
 
         // Send verification email with the code
@@ -86,11 +86,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect('/');
+        return redirect()->route('login');
     }
 
     public function verify(Request $request)
@@ -100,19 +98,38 @@ class AuthController extends Controller
                 'otp' => 'required|string|min:6|max:6'
             ]);
 
+            // Log the received OTP and current time
+            Log::info('Verification attempt:', [
+                'input_otp' => $request->otp,
+                'current_time' => Carbon::now()
+            ]);
+
             // Get the latest unverified user with this OTP code
             $otpCode = OtpCode::where('code', $request->otp)
                 ->where('expires_at', '>', Carbon::now())
+                ->where('is_used', false)
                 ->first();
+
+            // Log the found OTP record
+            Log::info('Found OTP record:', [
+                'otpCode' => $otpCode ? $otpCode->toArray() : 'null'
+            ]);
 
             if ($otpCode) {
                 $user = User::find($otpCode->user_id);
+
+                // Log user info
+                Log::info('Found user:', [
+                    'user' => $user ? $user->toArray() : 'null'
+                ]);
+
                 if ($user) {
                     $user->email_verified_at = now();
                     $user->save();
 
-                    // Delete used OTP
-                    $otpCode->delete();
+                    // Mark OTP as used
+                    $otpCode->is_used = true;
+                    $otpCode->save();
 
                     // Log the user in
                     Auth::login($user);
@@ -122,40 +139,54 @@ class AuthController extends Controller
                 }
             }
 
+            Log::warning('Verification failed - no matching OTP found');
             return back()->with('error', 'Verification failed. Please try again.');
         } catch (\Exception $e) {
+            Log::error('Verification error: ' . $e->getMessage());
             return back()->with('error', 'Verification failed. Please try again.' . $e->getMessage());
         }
     }
 
     public function resendVerification(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email'
-    ]);
-    
-    $user = User::where('email', $request->email)->first();
-    
-    if (!$user) {
-        return back()->with('error', 'User not found.');
+    {
+        try {
+            $email = $request->email ?? Auth::user()?->email;
+
+            if (!$email) {
+                return back()->with('error', 'Email address not found.');
+            }
+
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                return back()->with('error', 'User not found.');
+            }
+
+            // Delete any existing OTP
+            OtpCode::where('user_id', $user->id)->delete();
+
+            // Generate new verification code
+            $verificationCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+            // Store new OTP
+            OtpCode::create([
+                'user_id' => $user->id,
+                'code' => $verificationCode,
+                'expires_at' => Carbon::now()->addMinutes(10),
+                'is_used' => false
+            ]);
+
+            // Send new verification email
+            Mail::to($user->email)->send(new VerificationMail($verificationCode));
+
+            return back()->with('success', 'New verification code has been sent to your email.');
+        } catch (\Exception $e) {
+            Log::error('Resend verification error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to resend verification code.');
+        }
     }
-    
-    // Delete any existing OTP
-    OtpCode::where('user_id', $user->id)->delete();
-    
-    // Generate new OTP
-    $otp = sprintf("%06d", mt_rand(1, 999999));
-    
-    // Store new OTP
-    OtpCode::create([
-        'user_id' => $user->id,
-        'code' => $otp,
-        'expires_at' => Carbon::now()->addMinutes(10),
-    ]);
-
-    // Send new verification email
-    Mail::to($user->email)->send(new VerificationMail($otp));
-
-    return back()->with('success', 'New verification code has been sent to your email.');
-}
+    public function showVerificationForm()
+    {
+        return view('auth.verify');
+    }
 }
