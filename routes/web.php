@@ -143,6 +143,11 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
         // Waiting List
         Route::get('/waiting-list/manage', [WaitingListController::class, 'manage'])->name('admin.waiting-list.manage');
+
+        Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
+        Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('profile.update');
+        Route::get('/users', [AdminController::class, 'usersList'])->name('users');
+        Route::post('/users/{id}/reset-password', [AdminController::class, 'resetUserPassword'])->name('users.reset-password');
     });
 });
 
@@ -166,6 +171,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Bookings
     Route::get('/booking-history', [BookingController::class, 'history'])->name('booking-history.index');
+    Route::get('/products/{id}', [ProductController::class, 'details'])->name('products.details');
+    Route::post('/product/order', [ProductController::class, 'order'])->name('products.order');
 });
 
 // Public Routes
