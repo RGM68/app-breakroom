@@ -25,7 +25,7 @@
         @endif
         ;font-weight: bolder">{{$event->status}}</p>
         <hr />
-        <form action="{{ route('event.updateStatus', $event->id) }}" method="POST" class="my-2">
+        <form action="{{ route('admin.event.updateStatus', $event->id) }}" method="POST" class="my-2">
             @csrf
             @method('PUT') 
             <label for="status-{{$event->id}}" class="form-label">Status:</label>

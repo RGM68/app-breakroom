@@ -23,7 +23,7 @@
         @endif
         ;font-weight: bolder">{{$product->status}}</p>
         <hr />
-        <form action="{{ route('product.updateStatus', $product->id) }}" method="POST" class="my-2">
+        <form action="{{ route('admin.product.updateStatus', $product->id) }}" method="POST" class="my-2">
             @csrf
             @method('PUT') 
             <label for="status-{{$product->id}}" class="form-label">Status:</label>

@@ -20,10 +20,10 @@
                         <a class="nav-link" href="{{ route('admin.index')}}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('table.index')}}">Tables</a>
+                        <a class="nav-link" href="{{ route('admin.table.index')}}">Tables</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('event.adminIndex')}}">Events</a>
+                        <a class="nav-link" href="{{ route('admin.event.adminIndex')}}">Events</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>

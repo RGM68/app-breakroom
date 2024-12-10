@@ -23,7 +23,7 @@
         @endif
         ;font-weight: bolder">{{$table->status}}</p>
         <hr />
-        <form action="{{ route('table.updateStatus', $table->id) }}" method="POST" class="my-2">
+        <form action="{{ route('admin.table.updateStatus', $table->id) }}" method="POST" class="my-2">
             @csrf
             @method('PUT') 
             <label for="status-{{$table->id}}" class="form-label">Status:</label>
