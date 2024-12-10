@@ -2,10 +2,10 @@
 
 @section('title', 'Admin Home Page')
 
-@section('content')
+@section(section: 'content')
     
 <h2>Tables</h2>
-<p><a href="{{route('table.index')}}">View All Tables</a></p>
+<p><a href="{{route('admin.table.index')}}">View All Tables</a></p>
 <div class="tables-container" style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;;">
 @foreach ($tables as $table)
     <div class="table-single text-center m-2" style="background-color: lightgrey; max-width: 400px; width: 400px; border-radius: 10px; padding: 10px">
@@ -26,7 +26,7 @@
 </div>
 
 <h2>Events</h2>
-<p><a href="{{route('event.adminIndex')}}">View All Events</a></p>
+<p><a href="{{route('admin.event.adminIndex')}}">View All Events</a></p>
 <div class="events-container" 
     style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
 @foreach ($events as $event)
@@ -49,7 +49,7 @@
 </div>
 
 <h2>Products</h2>
-<p><a href="/admin/products">View All Products</a></p>
+<p><a href="{{route('admin.product.adminIndex')}}">View All Products</a></p>
 <div class="products-container" 
     style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
 @foreach ($products as $product)
@@ -69,7 +69,7 @@
 </div>
 
 <h2>Food and Drinks</h2>
-<p><a href="/admin/foods">View All Products</a></p>
+<p><a href="{{route('admin.food.adminIndex')}}">View All Foods</a></p>
 <div class="foods-container" 
     style="display: flex; flex-wrap: wrap; justify-content: center; margin: auto;">
 @foreach ($foods as $food)

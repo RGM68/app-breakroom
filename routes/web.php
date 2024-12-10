@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\AdminMiddleware;
 
 // Base Routes
 Route::get('/', function () {
@@ -79,7 +80,7 @@ Route::resource('tables', TableController::class);
 Route::resource('table-bookings', TableBookingController::class);
 
 // Admin Routes
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
 
