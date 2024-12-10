@@ -13,32 +13,39 @@ use Illuminate\Support\Facades\Storage;
 class AdminController extends Controller
 {
     //
-    public function index()
-    {
-        //
-        $tables = Table::orderBy('capacity', 'desc')->get();
-        foreach ($tables as $table) {
-            $table->image_url = Storage::url($table->image);
-        }
-        $events = Event::orderBy('date', 'asc')->take(2)->get();
-        foreach ($events as $event) {
-            $event->image_url = Storage::url($event->image);
-        }
-        $products = Product::orderBy('name', 'asc')->take(3)->get();
-        foreach ($products as $product) {
-            $product->image_url = Storage::url($product->image);
-        }
-        $foods = FoodAndDrink::orderBy('name', 'asc')->take(3)->get();
-        foreach ($foods as $food) {
-            $food->image_url = Storage::url($food->image);
-        }
-        return view('admin.index', [
-            'tables' => $tables, 
-            'events' => $events, 
-            'products' => $products,
-            'foods' => $foods,
-        ]);
-    }
+    // public function index()
+    // {
+    //     //
+    //     $tables = Table::orderBy('capacity', 'desc')->get();
+    //     foreach ($tables as $table) {
+    //         $table->image_url = Storage::url($table->image);
+    //     }
+    //     $events = Event::orderBy('date', 'asc')->take(2)->get();
+    //     foreach ($events as $event) {
+    //         $event->image_url = Storage::url($event->image);
+    //     }
+    //     $products = Product::orderBy('name', 'asc')->take(3)->get();
+    //     foreach ($products as $product) {
+    //         $product->image_url = Storage::url($product->image);
+    //     }
+    //     $foods = FoodAndDrink::orderBy('name', 'asc')->take(3)->get();
+    //     foreach ($foods as $food) {
+    //         $food->image_url = Storage::url($food->image);
+    //     }
+    //     return view('admin.dashboard', [
+    //         'tables' => $tables,
+    //         'events' => $events,
+    //         'products' => $products,
+    //         'foods' => $foods,
+    //     ]);
+    // }
+
+    // public function dashboard()
+    // {
+    //     // Redirect to index since that's where your main admin view is
+    //     // return redirect()->route('admin.index');
+    //     return 'tes';
+    // }
 
     public function create_table()
     {

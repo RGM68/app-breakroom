@@ -22,28 +22,49 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required'
+    //     ]);
+
+    //     if (Auth::attempt($credentials)) {
+    //         $request->session()->regenerate();
+
+    //         // Check user role for redirection
+    //         if (Auth::user()->role_id == 1) {
+    //             return redirect()->intended('admin/dashboard');
+    //         }
+    //         return redirect()->intended('dashboard');
+    //     }
+
+    //     return back()->withErrors([
+    //         'email' => 'The provided credentials do not match our records.',
+    //     ]);
+    // }
+
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
 
-            // Check user role for redirection
-            if (Auth::user()->role_id == 1) {
-                return redirect()->intended('admin/dashboard');
-            }
-            return redirect()->intended('dashboard');
+        // Check user role for redirection
+        if (Auth::user()->role_id == 1) {
+            return redirect()->route('admin.index'); // Change this line
         }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return redirect()->intended('dashboard');
     }
 
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records.',
+    ]);
+}
     public function showRegistrationForm()
     {
         return view('auth.register');
