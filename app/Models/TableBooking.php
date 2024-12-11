@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class TableBooking extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'table_id',
+        'booking_time',
+        'duration',
+        'status'
+    ];
     //
     use HasFactory;
     public function user()

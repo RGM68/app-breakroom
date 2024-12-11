@@ -64,20 +64,28 @@ Route::middleware(['web'])->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
+// Users
+Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+    // Dashboard
+    // Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+
+    // Profile
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/tables', [UserController::class, 'tables'])->name('tables');
+    Route::get('/tables/book/{table_id}', [UserController::class, 'bookTablesView'])->name('tables.bookView');
+    Route::post('/tables/book/{table_id}', [UserController::class, 'bookTables'])->name('tables.book');
+    // Resource Routes
+});
+
+// Route::resource('tables', TableController::class);
+// Route::resource('table-bookings', TableBookingController::class);
+
 
 // Protected Routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        if (Auth::user()->role_id == 1) {
-            return redirect()->route('admin.index');
-        }
-        return view('user.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 });
-
-// Resource Routes
-Route::resource('tables', TableController::class);
-Route::resource('table-bookings', TableBookingController::class);
 
 // Admin Routes
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
@@ -185,4 +193,3 @@ Route::post('/bookings', [BookingController::class, 'book'])->name('bookings.boo
 Route::get('/bookings/history', [BookingController::class, 'history'])->name('bookings.history');
 Route::get('/events', [EventController::class, 'index'])->name('event.index');
 Route::get('/events/{id}', [EventController::class, 'details'])->name('event.details');
-

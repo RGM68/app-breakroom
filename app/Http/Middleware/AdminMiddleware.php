@@ -22,6 +22,6 @@ class AdminMiddleware
     if (Auth::check() && Auth::user()->role_id === 1) {
         return $next($request);
     }
-    return redirect('/')->with('error', 'Unauthorized access');
+    return redirect('/dashboard')->with('error', 'Unauthorized access');
 }
 }

@@ -29,7 +29,7 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        
+
         // Validate request data
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
@@ -48,6 +48,9 @@ class ProfileController extends Controller
 
         // Handle photo upload if provided
         if ($request->hasFile('photo')) {
+            // if ($user->photo) {
+            //     Storage::disk('public')->delete($user->photo); // Delete old photo if exists
+            // }
             $photoPath = $request->file('photo')->store('photos', 'public');
             $user->photo = $photoPath;
         }
