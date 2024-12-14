@@ -53,7 +53,7 @@ class EventController extends Controller
 
         // return redirect()->route('events.index')
         //     ->with('success', 'Event berhasil dibuat');
-        return redirect()->route('admin.event.index')
+        return redirect()->route('admin.event.adminIndex')
         ->with('success', 'Event berhasil dibuat');
 
     }
