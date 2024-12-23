@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -18,22 +17,19 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<int, string>
      */
-    // protected $fillable = [
-    //     'name',
-    //     'email',
-    //     'password',
-    //     'phone',
-    //     'role',
-    //     'reset_token'
-    // ];
-
     protected $fillable = [
         'name',
         'email',
         'password',
         'role_id',
         'verification_code',
-        'email_verified_at'
+        'email_verified_at',
+        'photo',
+        'is_active',
+        'phone_number',
+        'address',
+        'birth_date',
+        'bio'
     ];
 
     /**
@@ -56,7 +52,31 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Get user's profile photo URL
+     *
+     * @return string
+     */
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->photo) {
+            return asset('storage/' . $this->photo);
+        }
+        return asset('images/default-avatar.png');
+    }
+
+    /**
+     * Check if user is active
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->is_active;
     }
 
     // Existing relationships
@@ -80,10 +100,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Role::class);
     }
 
-    // Add this new relationship for OTP codes
     public function otpCodes()
     {
         return $this->hasMany(OtpCode::class);
     }
-    
 }

@@ -156,6 +156,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('profile.update');
         Route::get('/users', [AdminController::class, 'usersList'])->name('users');
         Route::post('/users/{id}/reset-password', [AdminController::class, 'resetUserPassword'])->name('users.reset-password');
+        Route::post('/users/{id}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
+
+        Route::post('/users/create-admin', [AdminController::class, 'createAdmin'])->name('users.create-admin');
     });
 });
 
