@@ -28,7 +28,7 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
                         <img src="{{ asset('photos/breakroom.png') }}" alt="Breakroom Logo" class="h-8 w-auto mr-2">
-                        <a href="#" class="text-white text-xl font-bold hover:text-yellow-200 transition duration-150">Breakroom</a>
+                        <a href="{{route('admin.index')}}" class="text-white text-xl font-bold hover:text-yellow-200 transition duration-150">Breakroom</a>
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition duration-150">
                                     Profile
                                 </a>
-                                <a href="{{ route('admin.users') }}"
+                                <a href="{{ route('admin.users.adminIndex') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition duration-150">
                                     Manage Users
                                 </a>
@@ -161,7 +161,7 @@
                             class="text-white hover:bg-blue-500 block px-3 py-2 rounded-md text-base font-medium transition duration-150">
                             Profile
                         </a>
-                        <a href="{{ route('admin.users') }}"
+                        <a href="{{ route('admin.users.adminIndex') }}"
                             class="text-white hover:bg-blue-500 block px-3 py-2 rounded-md text-base font-medium transition duration-150">
                             Manage Users
                         </a>

@@ -9,11 +9,9 @@
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Users Management</h2>
             <div class="flex gap-4">
-                <!-- Create Admin Button -->
-                <button onclick="openCreateAdminModal()" 
-                        class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-all duration-300">
-                    Create Admin Account
-                </button>
+                <a href="{{route('admin.users.create')}}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-all duration-300">
+                    Create New Account
+                </a>
                 <div class="relative">
                     <input type="text" id="searchInput" placeholder="Search users..." 
                            class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500">
@@ -23,7 +21,12 @@
                         </svg>
                     </div>
                 </div>
+                <a href="{{route('admin.index')}}" 
+                    class="inline-flex justify-center items-center px-4 py-2 bg-gray-100 rounded-md font-semibold text-sm text-gray-700 hover:bg-gray-200 transform hover:scale-105 transition-all duration-200 ease-in-out">
+                    Back to Dashboard
+                </a>
             </div>
+            
         </div>
 
         @if(session('success'))
@@ -37,6 +40,7 @@
                 {{ session('error') }}
             </div>
         @endif
+        
 
         <!-- Users Table -->
         <div class="overflow-x-auto">
@@ -102,7 +106,7 @@
                 </tbody>
             </table>
         </div>
-
+    
         <!-- Pagination -->
         <div class="mt-4">
             {{ $users->links() }}
@@ -110,48 +114,7 @@
     </div>
 </div>
 
-<!-- Create Admin Modal -->
-<div id="createAdminModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-medium text-gray-900">Create Admin Account</h3>
-            <button onclick="closeCreateAdminModal()" class="text-gray-400 hover:text-gray-500">
-                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-        <form action="{{ route('admin.users.create-admin') }}" method="POST" class="space-y-4">
-            @csrf
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" name="name" required
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="email" required
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" name="password" required
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Confirm Password</label>
-                <input type="password" name="password_confirmation" required
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">
-            </div>
-            <div class="flex justify-end pt-4">
-                <button type="submit" 
-                        class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-all duration-300">
-                    Create Admin
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+
 
 @push('scripts')
 <script>
@@ -168,13 +131,6 @@
     });
 
     // Modal functions
-    function openCreateAdminModal() {
-        document.getElementById('createAdminModal').classList.remove('hidden');
-    }
-
-    function closeCreateAdminModal() {
-        document.getElementById('createAdminModal').classList.add('hidden');
-    }
 
     // Toggle user status
     function toggleUserStatus(userId) {

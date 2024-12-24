@@ -146,7 +146,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         Route::get('/food-and-drinks/manage', [FoodAndDrinkController::class, 'manage'])->name('admin.food-and-drinks.manage');
 
         // User Management
-        Route::get('/users', [AdminController::class, 'userList'])->name('admin.users.index');
+        Route::get('/users', [AdminController::class, 'usersList'])->name('users.adminIndex');
+        Route::get('/users/create_account', [AdminController::class, 'createAccount'])->name('users.create');
+        Route::post('/users/create_account', [AdminController::class, 'storeAccount'])->name('users.store');
         Route::get('/users/{user}/reset-password', [AdminController::class, 'resetPassword'])->name('admin.users.reset-password');
 
         // Waiting List
@@ -154,11 +156,11 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
         Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
         Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('profile.update');
-        Route::get('/users', [AdminController::class, 'usersList'])->name('users');
+        // Route::get('/users', [AdminController::class, 'usersList'])->name('users');
         Route::post('/users/{id}/reset-password', [AdminController::class, 'resetUserPassword'])->name('users.reset-password');
         Route::post('/users/{id}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
 
-        Route::post('/users/create-admin', [AdminController::class, 'createAdmin'])->name('users.create-admin');
+        // Route::post('/users/create-admin', [AdminController::class, 'createAdmin'])->name('users.create-admin');
     });
 });
 

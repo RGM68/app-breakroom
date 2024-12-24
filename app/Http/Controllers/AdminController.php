@@ -19,27 +19,44 @@ class AdminController extends Controller
     public function index()
     {
         // Your existing index method remains the same
+        $allTables = Table::orderBy('capacity', 'desc')->get();
         $tables = Table::orderBy('capacity', 'desc')->get();
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }
+        $allEvents = Event::orderBy('date', 'asc')->get();
         $events = Event::orderBy('date', 'asc')->take(2)->get();
         foreach ($events as $event) {
             $event->image_url = Storage::url($event->image);
         }
+        $allProducts = Product::orderBy('name', 'asc')->get();
         $products = Product::orderBy('name', 'asc')->take(3)->get();
         foreach ($products as $product) {
             $product->image_url = Storage::url($product->image);
         }
+        $allFoods = FoodAndDrink::orderBy('name', 'asc')->get();
         $foods = FoodAndDrink::orderBy('name', 'asc')->take(3)->get();
         foreach ($foods as $food) {
             $food->image_url = Storage::url($food->image);
+        }
+        $allUsers = User::where('id', '!=', auth()->id())
+                        ->orderBy('created_at', 'desc')->get();
+        $users = User::where('id', '!=', auth()->id())
+                        ->orderBy('created_at', 'desc')->take(3)->get();
+        foreach ($users as $user) {
+            $user->image_url = Storage::url($user->image);
         }
         return view('admin.index', [
             'tables' => $tables,
             'events' => $events,
             'products' => $products,
             'foods' => $foods,
+            'users' => $users,
+            'allTables' => $allTables,
+            'allEvents' => $allEvents,
+            'allProducts' => $allProducts,
+            'allFoods' => $allFoods,
+            'allUsers' => $allUsers
         ]);
     }
 
@@ -169,6 +186,29 @@ class AdminController extends Controller
 
         $status = $user->is_active ? 'activated' : 'deactivated';
         return back()->with('success', "User has been {$status} successfully.");
+    }
+
+    public function createAccount(Request $request)
+    {
+        return view('admin.users.create_account');
+    }
+
+    public function storeAccount(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+        $account = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role_id' => $request->role,
+            'email_verified_at' => now(),
+        ]);
+        return redirect()->route('admin.users.adminIndex')
+        ->with('success', 'Account successfully made!');
     }
 
     public function createAdmin(Request $request)

@@ -149,7 +149,7 @@
                         'color' => 'emerald',
                         'route' => 'admin.table.index',
                         'icon' => '🎱',
-                        'stat' => $tables->count() . ' Active'
+                        'stat' => $allTables->count() . ' Active'
                     ],
                     [
                         'title' => 'Events',
@@ -157,7 +157,7 @@
                         'color' => 'blue',
                         'route' => 'admin.event.adminIndex',
                         'icon' => '🎉',
-                        'stat' => $events->count() . ' Upcoming'
+                        'stat' => $allEvents->count() . ' Upcoming'
                     ],
                     [
                         'title' => 'Products',
@@ -165,7 +165,7 @@
                         'color' => 'indigo',
                         'route' => 'admin.product.adminIndex',
                         'icon' => '🛍️',
-                        'stat' => $products->count() . ' Items'
+                        'stat' => $allProducts->count() . ' Items'
                     ],
                     [
                         'title' => 'Food & Drinks',
@@ -173,7 +173,15 @@
                         'color' => 'purple',
                         'route' => 'admin.food.adminIndex',
                         'icon' => '🍽️',
-                        'stat' => $foods->count() . ' Items'
+                        'stat' => $allFoods->count() . ' Items'
+                    ],
+                    [
+                        'title' => 'Users',
+                        'desc' => 'Manage Users',
+                        'color' => 'red',
+                        'route' => 'admin.users.adminIndex',
+                        'icon' => '👤',
+                        'stat' => $allUsers->count() . ' Users'
                     ]
                 ];
             @endphp
