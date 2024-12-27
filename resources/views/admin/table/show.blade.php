@@ -7,7 +7,9 @@
 <div class="table-container" style="max-width:500px; margin: auto">
     <div class="table-card text-center p-3" style="background-color: lightblue; border-radius: 10px">
         <h1>Table Details</h1>
-        <img src="{{asset($image)}}"  style="width: 250px; border-radius: 10px"/><br />
+        <div class="p-4 flex justify-center">
+            <img src="{{asset($image)}}" class="my-2" style="width: 250px; border-radius: 10px"/>
+        </div>
         <p><strong>Table Number:</strong> {{ $table->number }}</p>
         <p><strong>Capacity:</strong> {{ $table->capacity }}</p>
         <p><b>Rp. {{$table->price}}</b>/hr</p>

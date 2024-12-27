@@ -8,7 +8,9 @@
     <div class="event-card text-center p-3" style="background-color: #c29ded; border-radius: 10px">
         <h1>Event Details</h1>
         <h4 class="text-center">{{$event->name}}</h4>
-        <img src="{{asset($image)}}" class="my-2" style="width: 250px; height: 250px; border-radius: 10px"/>
+        <div class="p-4 flex justify-center">
+            <img src="{{asset($image)}}" class="my-2" style="width: 250px; border-radius: 10px"/>
+        </div>
         <p style="">{{$event->description}}</p>
         <p style="">{{$event->location}}</p>
         <p style="font-weight: bold">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }} {{ \Carbon\Carbon::parse($event->time)->format('H:i') }}</p>
