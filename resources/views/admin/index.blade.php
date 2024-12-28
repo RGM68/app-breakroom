@@ -111,28 +111,6 @@
                         </svg>
                         <span class="notification-badge">3</span>
                     </button>
-                    <div id="notificationDropdown" class="notification-dropdown">
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold mb-2">Notifications</h3>
-                            <div class="space-y-3" id="notificationContainer">
-                                <div class="p-3 bg-gray-50 rounded-lg">
-                                    <p class="text-sm font-medium text-gray-800">New Table Booking</p>
-                                    <p class="text-xs text-gray-500">Table 3 booked for 2 hours</p>
-                                    <span class="text-xs text-gray-400">2 minutes ago</span>
-                                </div>
-                                <div class="p-3 bg-gray-50 rounded-lg">
-                                    <p class="text-sm font-medium text-gray-800">Event Registration</p>
-                                    <p class="text-xs text-gray-500">5 new registrations for Pool Tournament</p>
-                                    <span class="text-xs text-gray-400">15 minutes ago</span>
-                                </div>
-                                <div class="p-3 bg-gray-50 rounded-lg">
-                                    <p class="text-sm font-medium text-gray-800">Low Stock Alert</p>
-                                    <p class="text-xs text-gray-500">Cue tips running low</p>
-                                    <span class="text-xs text-gray-400">1 hour ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
