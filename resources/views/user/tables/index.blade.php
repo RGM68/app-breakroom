@@ -56,11 +56,17 @@
                                     <p class="text-center text-lg font-bold text-yellow-500">Rp. {{ number_format($table->price) }}/hr</p>
                                     <p class="text-center text-sm font-medium text-gray-300">Capacity: {{ $table->capacity }} people</p>
                                     <p class="text-center font-semibold"
-                                        style="color: {{ $table->status == 'Open' ? 'green' : 'red' }};">
-                                        {{ $table->status }}
+                                        @if ($table->status_flag == 'Open')
+                                            style="color: green;"
+                                        @elseif ($table->status_flag == 'Taken')
+                                            style="color: yellow;"
+                                        @elseif ($table->status_flag == 'Closed')
+                                            style="color: red;"
+                                        @endif>
+                                        {{ $table->status_flag }}
                                     </p>
 
-                                    @if (strtolower($table->status) == 'open')
+                                    @if (strtolower($table->status_flag) == 'open')
                                         <div class="text-center mt-4">
                                             <a href="{{ route('user.tables.bookView', ['table_id' => $table->id]) }}"
                                                class="inline-block px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all duration-300">

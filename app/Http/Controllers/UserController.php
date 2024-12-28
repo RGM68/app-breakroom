@@ -23,7 +23,16 @@ class UserController extends Controller
 
     public function tables()
     {
-        $tables = Table::orderBy('number', 'asc')->get();
+        $tables = Table::with('tableBookings') // Eager load bookings for each table
+        ->orderBy('number', 'asc')
+        ->get()
+        ->map(function ($table) {
+            // Check if the table has any active bookings
+            $isTaken = $table->tableBookings->isNotEmpty(); // Modify logic as needed for your app
+            $table->status_flag = $isTaken ? 'Taken' : $table->status; // Preserve 'open' or 'closed' from table
+            $table->image_url = Storage::url($table->image);
+            return $table;
+        });
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }
