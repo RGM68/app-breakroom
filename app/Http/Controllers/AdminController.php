@@ -129,9 +129,12 @@ class AdminController extends Controller
             if ($user->photo) {
                 Storage::delete($user->photo);
             }
-            $filename = 'photos/' . time() . '.' . $request->file('photo')->getClientOriginalExtension();
-            $request->file('photo')->store($filename, 'public');
-            $user->photo = $filename;
+            $directory = 'photos';
+            $filename = time() . '.' . $request->file('photo')->getClientOriginalExtension();
+        
+            $path = $request->file('photo')->storeAs($directory, $filename, 'public');
+        
+            $user->photo = $path;
         }
 
         $user->save();

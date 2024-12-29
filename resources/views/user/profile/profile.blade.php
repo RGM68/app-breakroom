@@ -3,6 +3,10 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <a href="{{route('dashboard')}}"
+            class="inline-flex items-center justify-center px-4 py-2 bg-gray-100 rounded-md font-semibold text-sm text-gray-700 hover:bg-gray-200 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Back to Dashboard
+        </a>
         <h2 class="text-black text-2xl font-bold mb-6">Profile Settings</h2>
 
         @if (session('success'))
@@ -11,9 +15,18 @@
             </div>
         @endif
 
-        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @if($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+        <form action="{{ route('user.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
-            @method('PUT')
 
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
@@ -52,6 +65,66 @@
                 @enderror
                 <p class="mt-1 text-sm text-gray-500">Accepted formats: JPG, PNG, GIF. Max size: 2MB</p>
             </div>
+
+            <!-- Email -->
+            <div class="space-y-1">
+                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="email" value="{{ $user->email }}" required
+                           class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                <!-- Phone Number -->
+                <div class="space-y-1">
+                    <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="text" name="phone_number" value="{{ $user->phone_number }}"
+                           class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                <!-- Address -->
+                <div class="space-y-1">
+                    <label class="block text-sm font-medium text-gray-700">Address</label>
+                    <textarea name="address" rows="3"
+                              class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ $user->address }}</textarea>
+                </div>
+
+                <!-- Birth Date -->
+                <div class="space-y-1">
+                    <label class="block text-sm font-medium text-gray-700">Birth Date</label>
+                    <input type="date" name="birth_date" value="{{ $user->birth_date }}"
+                           class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                <!-- Bio -->
+                <div class="space-y-1">
+                    <label class="block text-sm font-medium text-gray-700">Bio</label>
+                    <textarea name="bio" rows="4"
+                              class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ $user->bio }}</textarea>
+                </div>
+
+                <!-- Password Section -->
+                <div class="border-t pt-6 mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Change Password</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Current Password</label>
+                            <input type="password" name="current_password"
+                                   class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">New Password</label>
+                            <input type="password" name="password"
+                                   class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                            <input type="password" name="password_confirmation"
+                                   class="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
 
             <div class="pt-4">
                 <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
