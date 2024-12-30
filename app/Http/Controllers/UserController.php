@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Table;
 use App\Models\TableBooking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,9 +18,61 @@ class UserController extends Controller
         return view('user.dashboard', compact('tables'));
     }
 
-    public function profile() {}
+    public function profile() {
+        $user = auth()->user();
 
-    public function updateProfile() {}
+        // Pass the $user variable to the 'user.profile.profile' view
+        return view('user.profile.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request) {
+        $user = auth()->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'phone_number' => 'nullable|string|max:255',
+            'address' => 'nullable|string',
+            'birth_date' => 'nullable|date',
+            'bio' => 'nullable|string',
+            'current_password' => 'required_with:password',
+            'password' => 'nullable|string|min:8|confirmed',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        if ($request->password && !Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'The provided password does not match your current password.']);
+        }
+
+        $user->fill($request->only([
+            'name',
+            'email',
+            'phone_number',
+            'address',
+            'birth_date',
+            'bio'
+        ]));
+
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('photo')) {
+            if ($user->photo) {
+                Storage::delete($user->photo);
+            }
+            $directory = 'photos';
+            $filename = time() . '.' . $request->file('photo')->getClientOriginalExtension();
+        
+            $path = $request->file('photo')->storeAs($directory, $filename, 'public');
+        
+            $user->photo = $path;
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully');
+    }
 
     public function tables()
     {

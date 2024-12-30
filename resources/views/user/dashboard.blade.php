@@ -32,7 +32,7 @@
                     </li>
                     <!-- Masih Blom Fix -->
                     <li><a href="#" class="block px-4 py-2 rounded-md  hover:text-yellow-400">Event</a></li>
-                    <li><a href="#" class="block px-4 py-2 rounded-md  hover:text-yellow-400">Profile</a></li>
+                    <li><a href="{{route('user.profile')}}" class="block px-4 py-2 rounded-md  hover:text-yellow-400">Profile</a></li>
                     <li><a href="#" class="block px-4 py-2 rounded-md  hover:text-yellow-400">Products</a></li>
                     <li><a href="#" class="block px-4 py-2 rounded-md  hover:text-yellow-400">Foods</a></li>
                     <li><a href="#" class="block px-4 py-2 rounded-md  hover:text-yellow-400">Booking History</a>
