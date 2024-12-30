@@ -42,7 +42,8 @@
                 <label class="block text-sm font-medium text-gray-700">Current Profile Photo</label>
                 <div class="mt-2">
                     @if($user->photo)
-                        <img src="{{ Storage::url($user->photo) }}" alt="Profile Photo" class="h-32 w-32 rounded-full object-cover">
+                        {{-- <img src="{{ Storage::url($user->photo) }}" alt="Profile Photo" class="h-32 w-32 rounded-full object-cover"> --}}
+                        <img src="{{ asset('storage/' . $user->photo) }}" alt="Profile Photo" class="h-32 w-32 rounded-full object-cover">
                     @else
                         <div class="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center">
                             <span class="text-gray-500">No photo</span>

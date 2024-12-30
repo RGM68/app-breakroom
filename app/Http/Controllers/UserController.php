@@ -13,8 +13,7 @@ class UserController extends Controller
 {
     public function dashboard()
     {
-        $tables = Table::all();
-
+        $tables = Table::take(3)->get();
         return view('user.dashboard', compact('tables'));
     }
 
