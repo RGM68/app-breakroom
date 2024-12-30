@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Show more tables button -->
-                @if (count($tables) > 3)
+                @if (count($tables))
                     <div class="mt-6 text-center">
                         <a href="{{ route('user.tables') }}" class="text-yellow-400 underline hover:text-yellow-500">See
                             more details</a>

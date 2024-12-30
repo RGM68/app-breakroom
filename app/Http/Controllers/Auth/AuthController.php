@@ -77,7 +77,7 @@ class AuthController extends Controller
 
         // Send verification email with the code
         Mail::to($user->email)->send(new VerificationMail($verificationCode));
-
+        
         return redirect()->route('otp.verify')
             ->with('success', 'Please check your email for verification code');
     }
