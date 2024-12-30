@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    public function index()
+    public function userIndex()
     {
         $events = Event::upcoming()->get();
         return view('user.events.index', compact('events'));
@@ -18,7 +18,13 @@ class EventController extends Controller
     public function details($id)
     {
         $event = Event::findOrFail($id);
-        return view('user.events.details', compact('event'));
+        $user = auth()->user();
+        $isRegistered = $event->eventRegistration()
+        ->where('user_id', $user->id)
+        ->where('status', 'Ready')
+        ->exists();
+
+        return view('user.events.details', compact('event', 'isRegistered'));
     }
 
     public function adminIndex()
@@ -121,15 +127,43 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($eventId);
         $user = auth()->user();
+        
+        $registration = $event->eventRegistration()
+            ->where('user_id', $user->id)
+            ->first();
 
-        // Cek apakah user sudah terdaftar
-        if ($event->participants()->where('user_id', $user->id)->exists()) {
-            return back()->with('error', 'Anda sudah terdaftar di event ini');
+        if ($registration) {
+            if ($registration->status === 'Ready') {
+                return back()->with('error', 'Anda sudah terdaftar di event ini.');
+            } elseif ($registration->status === 'Cancelled') {
+                $registration->update(['status' => 'Ready']);
+                return back()->with('success', 'Registrasi Anda berhasil.');
+            }
         }
-
-        $event->participants()->attach($user->id);
+        $event->eventRegistration()->create([
+            'user_id' => $user->id,
+            'status' => 'Ready', 
+        ]);
 
         return back()->with('success', 'Registrasi event berhasil');
+    }
+
+    public function cancel($eventId)
+    {
+        $event = Event::findOrFail($eventId);
+        $user = auth()->user();
+
+        $registration = $event->eventRegistration()
+            ->where('user_id', $user->id)
+            ->where('status', 'Ready')
+            ->first();
+
+        if ($registration) {
+            $registration->update(['status' => 'Cancelled']);
+            return back()->with('success', 'Registrasi Anda telah dibatalkan.');
+        }
+
+        return back()->with('error', 'Anda belum terdaftar di event ini.');
     }
 
     public function destroy($id)

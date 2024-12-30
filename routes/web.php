@@ -72,9 +72,18 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // Profile
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    
+    // Tables
     Route::get('/tables', [UserController::class, 'tables'])->name('tables');
     Route::get('/tables/book/{table_id}', [UserController::class, 'bookTablesView'])->name('tables.bookView');
     Route::post('/tables/book/{table_id}', [UserController::class, 'bookTables'])->name('tables.book');
+
+    // EVENTS
+    Route::get('/events', [EventController::class, 'userIndex'])->name('event.index');
+    Route::get('/events/{event_id}', [EventController::class, 'details'])->name('event.details');
+    Route::post('/events/{event_id}/register', [EventController::class, 'register'])->name('event.register');
+    Route::post('/events/{event_id}/cancel', [EventController::class, 'cancel'])->name('event.cancel');
+    
     // Resource Routes
 });
 
@@ -190,12 +199,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Public Routes
-Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/bookings/check', [BookingController::class, 'checkAvailability'])->name('bookings.check');
 Route::post('/bookings', [BookingController::class, 'book'])->name('bookings.book');
 Route::get('/bookings/history', [BookingController::class, 'history'])->name('bookings.history');
-Route::get('/events', [EventController::class, 'index'])->name('event.index');
-Route::get('/events/{id}', [EventController::class, 'details'])->name('event.details');
+// Route::get('/events', [EventController::class, 'index'])->name('event.index');
+// Route::get('/events/{id}', [EventController::class, 'details'])->name('event.details');
+// Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');

@@ -9,6 +9,11 @@ class EventRegistration extends Model
 {
     //
     use HasFactory;
+    protected $fillable = [
+        'event_id',
+        'user_id',
+        'status',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);

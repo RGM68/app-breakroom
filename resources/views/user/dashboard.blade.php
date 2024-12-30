@@ -33,7 +33,7 @@
                     <!-- User Menu -->
                     <div class="relative">
                         <button type="button" class="flex items-center space-x-3 focus:outline-none" id="user-menu-button">
-                            <img src="/api/placeholder/40/40" alt="User" class="h-10 w-10 rounded-full border-2 border-yellow-400"/>
+                            <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="User" class="h-10 w-10 rounded-full border-2 border-yellow-400"/>
                             <span class="hidden md:block">{{ Auth::user()->name }}</span>
                         </button>
                         <!-- Dropdown Menu -->
@@ -72,7 +72,7 @@
             <div class="bg-gradient-to-br from-blue-900 to-blue-800 p-6 rounded-xl shadow-lg hover:scale-105 transition-transform">
                 <h3 class="text-xl font-semibold mb-4">Upcoming Events</h3>
                 <p class="text-gray-300 mb-4">Check out our tournaments and special events</p>
-                <a href="#" class="inline-block bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">View Events</a>
+                <a href="{{route('user.event.index')}}" class="inline-block bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">View Events</a>
             </div>
             
             <div class="bg-gradient-to-br from-yellow-900 to-yellow-800 p-6 rounded-xl shadow-lg hover:scale-105 transition-transform">

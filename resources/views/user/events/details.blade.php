@@ -3,8 +3,19 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
+        @if(session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
         <!-- Back Button -->
-        <a href="{{ route('event.index') }}" class="inline-flex items-center text-blue-500 hover:text-blue-600 mb-6">
+        <a href="{{ route('user.event.index') }}" class="inline-flex items-center text-blue-500 hover:text-blue-600 mb-6">
             <i class="fas fa-arrow-left mr-2"></i> Back to Events
         </a>
 
@@ -75,6 +86,32 @@
                         {{ $event->status }}
                     </span>
                 </div>
+
+                <!-- Cancel -->
+                @if ($isRegistered)
+                    @if($event->status === 'Open') 
+                    <div class="mb-6">
+                        <form method="POST" action="{{ route('user.event.cancel', ['event_id' => $event->id]) }}" class="space-y-6">
+                        @csrf
+                        <button type="submit" onclick="return confirm('Are you sure you want to cancel?')"
+                                class="flex-1 px-6 py-3 bg-gradient-to-r from-red-400 to-red-600 text-black font-bold rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all duration-200">
+                            Cancel Registration
+                        </button>
+                    </div>
+                    @endif
+                <!-- Register -->
+                @else
+                    @if($event->status === 'Open') 
+                    <div class="mb-6">
+                        <form method="POST" action="{{ route('user.event.register', ['event_id' => $event->id]) }}" class="space-y-6">
+                        @csrf
+                        <button type="submit" 
+                                class="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all duration-200">
+                            Confirm Registration
+                        </button>
+                    </div>
+                    @endif
+                @endif
             </div>
         </div>
     </div>

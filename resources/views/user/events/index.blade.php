@@ -2,8 +2,11 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
+    <a href="{{route('dashboard')}}"
+            class="inline-flex items-center justify-center px-4 py-2 mb-2 bg-gray-100 rounded-md font-semibold text-sm text-gray-700 hover:bg-gray-200 transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            Back to Dashboard
+        </a>
     <h1 class="text-3xl font-bold mb-8">Upcoming Events</h1>
-
     @if($events->isEmpty())
         <div class="text-center py-8">
             <p class="text-gray-600">No upcoming events at the moment.</p>
@@ -48,7 +51,7 @@
 
                         <!-- View Details Button -->
                         <div class="flex justify-center">
-                            <a href="{{ route('events.details', $event->id) }}" 
+                            <a href="{{ route('user.event.details', $event->id) }}" 
                                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
                                 View Details
                             </a>
