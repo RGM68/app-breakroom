@@ -131,11 +131,9 @@
                                     />
                                     <!-- Status Badge -->
                                     <div class="absolute top-4 right-4">
-                                        <span class="px-3 py-1 rounded-full text-sm font-semibold
-                                            {{ strtolower($table->status_flag) == 'open' ? 'bg-green-900/80 text-green-300' : 
-                                               (strtolower($table->status_flag) == 'taken' ? 'bg-yellow-900/80 text-yellow-300' : 'bg-red-900/80 text-red-300') }}">
-                                            {{ $table->status_flag }}
-                                        </span>
+                                    <span class="px-3 py-1 rounded-full text-sm {{ strtolower($table->status) == 'open' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300' }}">
+                                        {{ $table->status }}
+                                    </span>
                                     </div>
                                 </div>
 
@@ -157,7 +155,7 @@
                                         </p>
                                     </div>
 
-                                    @if (strtolower($table->status_flag) == 'open')
+                                    @if (strtolower($table->status) == 'open')
                                         <div class="mt-6">
                                             <a href="{{ route('user.tables.bookView', ['table_id' => $table->id]) }}"
                                                class="block w-full text-center bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all duration-300">

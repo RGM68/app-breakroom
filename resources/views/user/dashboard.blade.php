@@ -78,7 +78,7 @@
             <div class="bg-gradient-to-br from-yellow-900 to-yellow-800 p-6 rounded-xl shadow-lg hover:scale-105 transition-transform">
                 <h3 class="text-xl font-semibold mb-4">Loyalty Program</h3>
                 <p class="text-gray-300 mb-4">View your points and available rewards</p>
-                <a href="#" class="inline-block bg-yellow-700 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors">Check Rewards</a>
+                <a href="{{route('user.loyalty_program.index')}}" class="inline-block bg-yellow-700 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors">Check Rewards</a>
             </div>
         </div>
 

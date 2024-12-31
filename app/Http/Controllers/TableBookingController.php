@@ -15,6 +15,46 @@ class TableBookingController extends Controller
         //
     }
 
+    public function adminIndex()
+    {
+        //
+        $bookings = TableBooking::with(['user', 'table'])->where('status', 'active')
+        ->orderBy('booking_time', 'asc')->get();
+
+        foreach($bookings as $booking){
+            $booking->total_price = ($booking->duration / 60) * $booking->table->price;
+        }
+
+        return view('admin.table_bookings.index', compact('bookings'));
+
+    }
+
+    public function finish($id)
+    {
+        $booking = TableBooking::with(['user', 'table'])->findOrFail($id);
+
+        $duration = $booking->duration ?? 0;
+        $price = $booking->table->price ?? 0;
+        $total_price = ($duration / 60) * $price;
+
+        $booking->status = 'finished';
+        $booking->user->loyalty_points += ceil($total_price / 10000);
+        $booking->save();
+        $booking->user->save();
+
+        return redirect('/admin/bookings')->with('success', 'Booking has been marked as finished.');
+    }
+
+    public function cancel($id)
+    {
+        $booking = TableBooking::with(['user', 'table'])->findOrFail($id);
+        $booking->status = 'cancelled';
+        $booking->save();
+
+        return redirect('/admin/bookings')->with('success', 'Booking has been marked as cancelled.');
+
+    }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -210,6 +210,8 @@
             }
         });
 
+        
+
         // Calculate estimated price for open duration
         openDurationInput.addEventListener('input', function() {
             const minutes = parseInt(this.value) || 0;

@@ -84,6 +84,9 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::post('/events/{event_id}/register', [EventController::class, 'register'])->name('event.register');
     Route::post('/events/{event_id}/cancel', [EventController::class, 'cancel'])->name('event.cancel');
     
+    //Loyyalty
+    Route::get('/loyalty_program', [UserController::class, 'loyaltyProgramIndex'])->name('loyalty_program.index');
+
     // Resource Routes
 });
 
@@ -114,6 +117,12 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         Route::delete('/table/{id}', [TableController::class, 'destroy'])->name('table.destroy');
         Route::get('/tables/status', [TableController::class, 'status'])->name('admin.tables.status');
         Route::put('/tables/{table}/update-status', [TableController::class, 'updateStatus'])->name('admin.tables.update-status');
+
+        // Table Bookings
+        Route::get('/bookings', [TableBookingController::class, 'adminIndex'])->name('booking.index');
+        Route::get('/booking/{id}/finish', [TableBookingController::class, 'finish'])->name('booking.finish');
+        Route::get('/booking/{id}/cancel', [TableBookingController::class, 'cancel'])->name('booking.cancel');
+
 
         // Events
         Route::get('/events', [EventController::class, 'adminIndex'])->name('event.adminIndex');

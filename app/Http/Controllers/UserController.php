@@ -75,16 +75,7 @@ class UserController extends Controller
 
     public function tables()
     {
-        $tables = Table::with('tableBookings') // Eager load bookings for each table
-        ->orderBy('number', 'asc')
-        ->get()
-        ->map(function ($table) {
-            // Check if the table has any active bookings
-            $isTaken = $table->tableBookings->isNotEmpty(); // Modify logic as needed for your app
-            $table->status_flag = $isTaken ? 'Taken' : $table->status; // Preserve 'open' or 'closed' from table
-            $table->image_url = Storage::url($table->image);
-            return $table;
-        });
+        $tables = Table::orderBy('capacity', 'desc')->get();
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }
@@ -115,5 +106,12 @@ class UserController extends Controller
             'status' => 'active',
         ]);
         return redirect()->route('user.tables')->with(['booking_status' => 'Berhasil booking table ' . $table->number . '!']);
+    }
+
+    public function loyaltyProgramIndex()
+    {
+        //
+        $user = auth()->user();
+        return view('user.loyalty.index', compact('user'));
     }
 }

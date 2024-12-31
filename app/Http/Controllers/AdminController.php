@@ -6,6 +6,7 @@ use App\Models\FoodAndDrink;
 use App\Models\Table;
 use App\Models\Event;
 use App\Models\Product;
+use App\Models\TableBooking;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +21,7 @@ class AdminController extends Controller
     {
         // Your existing index method remains the same
         $allTables = Table::orderBy('capacity', 'desc')->get();
-        $tables = Table::orderBy('capacity', 'desc')->get();
+        $tables = Table::orderBy('capacity', 'desc')->take(3)->get();
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }
@@ -46,12 +47,14 @@ class AdminController extends Controller
         foreach ($users as $user) {
             $user->image_url = Storage::url($user->image);
         }
+        $bookings = TableBooking::where('status', 'active')->get();
         return view('admin.index', [
             'tables' => $tables,
             'events' => $events,
             'products' => $products,
             'foods' => $foods,
             'users' => $users,
+            'bookings' => $bookings,
             'allTables' => $allTables,
             'allEvents' => $allEvents,
             'allProducts' => $allProducts,

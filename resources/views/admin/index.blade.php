@@ -160,6 +160,14 @@
                         'route' => 'admin.users.adminIndex',
                         'icon' => '👤',
                         'stat' => $allUsers->count() . ' Users'
+                    ],
+                    [
+                        'title' => 'Bookings',
+                        'desc' => 'Manage Bookings',
+                        'color' => 'yellow',
+                        'route' => 'admin.booking.index',
+                        'icon' => '📑',
+                        'stat' => $bookings->count() . ' Bookings'
                     ]
                 ];
             @endphp
