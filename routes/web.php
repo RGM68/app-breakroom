@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FoodAndDrinkController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WaitingListController;
 use App\Http\Controllers\LoyaltyProgramController;
 use App\Http\Controllers\Auth\AuthController;
@@ -86,7 +87,8 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     
     //Loyyalty
     Route::get('/loyalty_program', [UserController::class, 'loyaltyProgramIndex'])->name('loyalty_program.index');
-
+    Route::post('/loyalty/redeem-voucher/{voucher}', [LoyaltyProgramController::class, 'redeemVoucher'])
+    ->name('loyalty.redeem-voucher');
     // Resource Routes
 });
 
@@ -179,6 +181,15 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         Route::post('/users/{id}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
 
         // Route::post('/users/create-admin', [AdminController::class, 'createAdmin'])->name('users.create-admin');
+        
+        // VOUCHERS
+        Route::get('/vouchers', [VoucherController::class, 'adminIndex'])->name('voucher.adminIndex');
+        Route::get('/voucher/create_voucher', [VoucherController::class, 'create_voucher'])->name('voucher.create');
+        Route::post('/voucher/create_voucher', [VoucherController::class, 'store'])->name('voucher.store');
+        Route::put('/voucher/{id}/status', [VoucherController::class, 'updateStatus'])
+        ->name('voucher.updateStatus');
+        Route::get('/voucher/{id}/edit', [VoucherController::class, 'edit'])->name('voucher.edit');
+        Route::put('/voucher/{id}', [VoucherController::class, 'update'])->name('voucher.update');
     });
 });
 
