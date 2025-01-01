@@ -12,12 +12,12 @@ input {
 }
 
 .container {
-  position: relative;
-  width: 100%;
-  background-color: #fff;
-  min-height: 100vh;
-  overflow: hidden;
-}
+    position: relative;
+    width: 100%;
+    background-color: #000; /* Latar belakang utama hitam */
+    min-height: 100vh;
+    overflow: hidden;
+  }
 
 .forms-container {
   position: absolute;
@@ -25,9 +25,13 @@ input {
   height: 100%;
   top: 0;
   left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .signin-signup {
+    background-color: rgba(255, 255, 255, 0.1); 
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -37,6 +41,8 @@ input {
   display: grid;
   grid-template-columns: 1fr;
   z-index: 5;
+  border-radius: 10px;
+  max-width: 500px;
 }
 
 form {
@@ -54,6 +60,8 @@ form {
 form.sign-up-form {
   opacity: 0;
   z-index: 1;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 form.sign-in-form {
@@ -61,15 +69,16 @@ form.sign-in-form {
 }
 
 .title {
-  font-size: 2.2rem;
-  color: #ff5e57;  /* Updated color */
-  margin-bottom: 10px;
-}
+    font-size: 2rem;
+    color: #ffffff; /* Warna teks putih */
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
 .input-field {
   max-width: 380px;
   width: 100%;
-  background-color: #f4f4f4;  /* Updated background color for input fields */
+  background-color: rgba(255, 255, 255, 0.2);  
   margin: 10px 0;
   height: 55px;
   border-radius: 55px;
@@ -82,7 +91,7 @@ form.sign-in-form {
 .input-field i {
   text-align: center;
   line-height: 55px;
-  color: #888;  /* Updated color for icons */
+  color: #ffffff; /* Updated color for icons */
   transition: 0.5s;
   font-size: 1.1rem;
 }
@@ -94,11 +103,11 @@ form.sign-in-form {
   line-height: 1;
   font-weight: 600;
   font-size: 1.1rem;
-  color: #333;  /* Updated text color for inputs */
+  color: #ffffff;  /* Updated text color for inputs */
 }
 
 .input-field input::placeholder {
-  color: #aaa;
+    color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
 }
 
@@ -119,7 +128,7 @@ form.sign-in-form {
   justify-content: center;
   align-items: center;
   margin: 0 0.45rem;
-  color: #333;  /* Updated color for social icons */
+  color: #333;  
   border-radius: 50%;
   border: 1px solid #333;
   text-decoration: none;
@@ -128,28 +137,28 @@ form.sign-in-form {
 }
 
 .social-icon:hover {
-  color: #ff5e57;  /* Updated hover color for social icons */
-  border-color: #ff5e57;  /* Updated hover border color */
-}
+    color: #FFD700; /* Warna hover ikon media sosial kuning */
+    border-color: #FFD700; /* Warna border hover media sosial kuning */
+  }
 
 .btn {
-  width: 150px;
-  background-color: #ff5e57;  /* Updated button color */
-  border: none;
-  outline: none;
-  height: 49px;
-  border-radius: 49px;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: 600;
-  margin: 10px 0;
-  cursor: pointer;
-  transition: 0.5s;
-}
+    width: 150px;
+    background-color: #3498db; /* Warna tombol kuning */
+    border: none;
+    outline: none;
+    height: 49px;
+    border-radius: 49px;
+    color: #ffffff;/* Teks tombol menjadi hitam */
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: 0.5s;
+  }
 
-.btn:hover {
-  background-color: #e04e47;  /* Updated hover color for button */
-}
+  .btn:hover {
+    background-color: #1d6fa5; /* Warna hover tombol kuning yang lebih terang */
+  }
 
 .panels-container {
   position: absolute;
@@ -162,18 +171,18 @@ form.sign-in-form {
 }
 
 .container:before {
-  content: "";
-  position: absolute;
-  height: 2000px;
-  width: 2000px;
-  top: -10%;
-  right: 48%;
-  transform: translateY(-50%);
-  background-image: linear-gradient(-45deg, #ff5e57 0%, #ff8a3d 100%);  /* Updated gradient */
-  transition: 1.8s ease-in-out;
-  border-radius: 50%;
-  z-index: 6;
-}
+    content: "";
+    position: absolute;
+    height: 2000px;
+    width: 2000px;
+    top: -10%;
+    right: 48%;
+    transform: translateY(-50%);
+    background-image: linear-gradient(-45deg, #FFD700 0%, #FFC107 100%); /* Gradasi kuning */
+    transition: 1.8s ease-in-out;
+    border-radius: 50%;
+    z-index: 6;
+  }
 
 .image {
   width: 100%;
@@ -201,10 +210,10 @@ form.sign-in-form {
 }
 
 .panel .content {
-  color: #fff;
-  transition: transform 0.9s ease-in-out;
-  transition-delay: 0.6s;
-}
+    color: #ffffff; /* Teks panel menjadi kuning */
+    transition: transform 0.9s ease-in-out;
+    transition-delay: 0.6s;
+  }
 
 .panel h3 {
   font-weight: 600;
@@ -219,13 +228,18 @@ form.sign-in-form {
 
 .btn.transparent {
   margin: 0;
-  background: none;
-  border: 2px solid #fff;
+  border: 2px solid #ffffff; /* White border for visibility */
+  color: #ffffff; /* White text for contrast */
   width: 130px;
   height: 41px;
   font-weight: 600;
   font-size: 0.8rem;
 }
+
+.btn.transparent:hover {
+    background-color: #ffffff; /* White background on hover */
+    color: #000; /* Black text on hover */
+  }
 
 .right-panel .image,
 .right-panel .content {
@@ -236,7 +250,12 @@ form.sign-in-form {
   display: flex;
   margin: 10px;
   gap: 20px;
+  color: #ffffff; 
 }
+
+.checkbox {
+    color: #ffffff;
+  }
 
 /* ANIMATION */
 
@@ -477,14 +496,13 @@ form.sign-in-form {
     }
   }
   
-
   .go-back-btn {
-    background-color: #3498db;  /* Blue color for the back button */
+    background-color: #FFD700; /* Tombol kembali kuning */
     border: none;
     outline: none;
     height: 49px;
     border-radius: 49px;
-    color: #fff;
+    color: #000; /* Teks tombol hitam */
     text-transform: uppercase;
     font-weight: 600;
     margin-top: 10px;
@@ -494,6 +512,14 @@ form.sign-in-form {
   }
   
   .go-back-btn:hover {
-    background-color: #2980b9;  /* Darker blue on hover */
+    background-color: #FFC107; /* Tombol hover kuning lebih terang */
+  }
+
+  /* Error Message */
+.error {
+    color: #ff6b6b; /* Warna merah untuk error */
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    text-align: center;
   }
   
