@@ -10,18 +10,18 @@ class EventController extends Controller
 {
     public function index()
 {
-    // Get all available events ordered by date
-    $events = Event::where('status', 'Open')
-        ->where('date', '>=', now())  // Only show future events
-        ->orderBy('date', 'asc')
-        ->get();
-        
+    // Get all events, sorted by newest to oldest date
+    $events = Event::orderBy('date', 'desc')->get();
+
+    // Ensure image URLs are properly generated
     foreach ($events as $event) {
-        $event->image_url = Storage::url($event->image);
+        $event->image_url = $event->image ? Storage::url($event->image) : null;
     }
 
     return view('user.events.index', compact('events'));
 }
+
+    
 
     public function details($id)
     {
