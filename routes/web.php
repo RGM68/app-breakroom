@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FoodAndDrinkController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WaitingListController;
 use App\Http\Controllers\LoyaltyProgramController;
 use App\Http\Controllers\Auth\AuthController;
@@ -79,14 +80,15 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::post('/tables/book/{table_id}', [UserController::class, 'bookTables'])->name('tables.book');
 
     // EVENTS
-    Route::get('/events', [EventController::class, 'userIndex'])->name('event.index');
+    Route::get('/events', [EventController::class, 'index'])->name('event.index');
     Route::get('/events/{event_id}', [EventController::class, 'details'])->name('event.details');
     Route::post('/events/{event_id}/register', [EventController::class, 'register'])->name('event.register');
     Route::post('/events/{event_id}/cancel', [EventController::class, 'cancel'])->name('event.cancel');
     
     //Loyyalty
     Route::get('/loyalty_program', [UserController::class, 'loyaltyProgramIndex'])->name('loyalty_program.index');
-
+    Route::post('/loyalty/redeem-voucher/{voucher}', [LoyaltyProgramController::class, 'redeemVoucher'])
+    ->name('loyalty.redeem-voucher');
     // Resource Routes
 });
 
@@ -179,6 +181,15 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         Route::post('/users/{id}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
 
         // Route::post('/users/create-admin', [AdminController::class, 'createAdmin'])->name('users.create-admin');
+        
+        // VOUCHERS
+        Route::get('/vouchers', [VoucherController::class, 'adminIndex'])->name('voucher.adminIndex');
+        Route::get('/voucher/create_voucher', [VoucherController::class, 'create_voucher'])->name('voucher.create');
+        Route::post('/voucher/create_voucher', [VoucherController::class, 'store'])->name('voucher.store');
+        Route::put('/voucher/{id}/status', [VoucherController::class, 'updateStatus'])
+        ->name('voucher.updateStatus');
+        Route::get('/voucher/{id}/edit', [VoucherController::class, 'edit'])->name('voucher.edit');
+        Route::put('/voucher/{id}', [VoucherController::class, 'update'])->name('voucher.update');
     });
 });
 
@@ -193,6 +204,7 @@ Route::middleware(['auth'])->group(function () {
     // Food & Drinks
     Route::get('/food-and-drinks', [FoodAndDrinkController::class, 'index'])->name('food-and-drinks.index');
     Route::post('/food-and-drinks/order', [FoodAndDrinkController::class, 'order'])->name('food-and-drinks.order');
+    Route::get('/food-drinks/{id}', [FoodAndDrinkController::class, 'details'])->name('food-drinks.details');
 
     // Waiting List
     Route::get('/waiting-list', [WaitingListController::class, 'index'])->name('waiting-list.index');
@@ -209,11 +221,13 @@ Route::middleware(['auth'])->group(function () {
 
 // Public Routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{id}', [ProductController::class, 'details'])->name('products.details');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/bookings/check', [BookingController::class, 'checkAvailability'])->name('bookings.check');
 Route::post('/bookings', [BookingController::class, 'book'])->name('bookings.book');
 Route::get('/bookings/history', [BookingController::class, 'history'])->name('bookings.history');
+
 // Route::get('/events', [EventController::class, 'index'])->name('event.index');
 // Route::get('/events/{id}', [EventController::class, 'details'])->name('event.details');
 // Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');

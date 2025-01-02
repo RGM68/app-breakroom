@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Product;
 use App\Models\TableBooking;
 use App\Models\User;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -48,6 +49,7 @@ class AdminController extends Controller
             $user->image_url = Storage::url($user->image);
         }
         $bookings = TableBooking::where('status', 'active')->get();
+        $vouchers = Voucher::orderBy('id', 'asc')->get();
         return view('admin.index', [
             'tables' => $tables,
             'events' => $events,
@@ -55,6 +57,7 @@ class AdminController extends Controller
             'foods' => $foods,
             'users' => $users,
             'bookings' => $bookings,
+            'vouchers' => $vouchers,
             'allTables' => $allTables,
             'allEvents' => $allEvents,
             'allProducts' => $allProducts,

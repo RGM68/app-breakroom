@@ -29,7 +29,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number',
         'address',
         'birth_date',
-        'bio'
+        'bio',
+        'loyalty_points',
+        'loyalty_tier',
+        'loyalty_total_spent'
     ];
 
     /**
@@ -104,4 +107,18 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(OtpCode::class);
     }
+    public function pointTransactions()
+    {
+        return $this->hasMany(PointTransaction::class);
+    }
+
+    public function userVouchers()
+    {
+        return $this->hasMany(UserVoucher::class);
+    }
+    public function loyaltyTier()
+    {
+        return $this->belongsTo(LoyaltyTier::class, 'loyalty_tier', 'name');
+    }
+
 }

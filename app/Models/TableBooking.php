@@ -12,8 +12,15 @@ class TableBooking extends Model
         'table_id',
         'booking_time',
         'duration',
-        'status'
+        'status',
+        'original_price',
+        'loyalty_discount',
+        'voucher_discount',
+        'used_voucher_id',
+        'final_price',
+        'booking_type'
     ];
+
     //
     use HasFactory;
     public function user()
@@ -25,5 +32,10 @@ class TableBooking extends Model
     public function table()
     {
         return $this->belongsTo(Table::class);
+    }
+
+    public function usedVoucher()
+    {
+        return $this->belongsTo(UserVoucher::class, 'used_voucher_id');
     }
 }

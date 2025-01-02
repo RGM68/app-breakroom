@@ -168,6 +168,14 @@
                         'route' => 'admin.booking.index',
                         'icon' => '📑',
                         'stat' => $bookings->count() . ' Bookings'
+                    ],
+                    [
+                        'title' => 'Vouchers',
+                        'desc' => 'Manage Vouchers',
+                        'color' => 'cyan',
+                        'route' => 'admin.voucher.adminIndex',
+                        'icon' => '🎟',
+                        'stat' => $vouchers->count() . ' Vouchers'
                     ]
                 ];
             @endphp

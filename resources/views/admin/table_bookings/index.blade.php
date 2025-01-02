@@ -26,6 +26,9 @@
                 <th>Booking Date</th>
                 <th>Booking Time</th>
                 <th>Duration</th>
+                <th>Original Price</th>
+                <th>Loyalty Discount</th>
+                <th>Voucher Discount</th>
                 <th>Total Price</th>
                 <th>Actions</th>
             </tr>
@@ -38,7 +41,10 @@
             <td>{{ \Carbon\Carbon::parse($booking->booking_time)->format('d, M, Y') }}</td>
             <td>{{ \Carbon\Carbon::parse($booking->booking_time)->format('H:i') }}</td>
             <td>{{ floor($booking->duration / 60) }} Hour(s) {{$booking->duration % 60}} Minutes</td>
-            <td>Rp. {{ number_format($booking->total_price, 2) }}</td>
+            <td>Rp. {{ number_format($booking->original_price, 2) }}</td>
+            <td>Rp. {{ number_format($booking->loyalty_discount, 2) }}</td>
+            <td>Rp. {{ number_format($booking->voucher_discount, 2) }}</td>
+            <td>Rp. {{ number_format($booking->final_price, 2) }}</td>
             <td>
                 <!-- Finish -->
                 <a href="{{route('admin.booking.finish', $booking->id)}}"class="btn btn-primary m-2">Finish</a>
