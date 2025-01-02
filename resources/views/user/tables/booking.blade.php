@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,17 +18,25 @@
                 <!-- Logo and Navigation -->
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center">
-                        <img src="{{ asset('photos/breakroom.png') }}" alt="Breakroom Logo" class="h-10 w-10 rounded-lg object-contain"/>
-                        <span class="ml-3 text-xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 text-transparent bg-clip-text">Breakroom</span>
+                        <img src="{{ asset('photos/breakroom.png') }}" alt="Breakroom Logo"
+                            class="h-10 w-10 rounded-lg object-contain" />
+                        <span
+                            class="ml-3 text-xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 text-transparent bg-clip-text">Breakroom</span>
                     </div>
-                    
+
                     <!-- Main Navigation -->
                     <div class="hidden md:flex ml-10 space-x-6">
-                        <a href="{{ route('dashboard') }}" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Home</a>
-                        <a href="{{ route('user.tables') }}" class="text-yellow-400 font-bold px-3 py-2 rounded-md">Tables</a>
-                        <a href="#" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Events</a>
-                        <a href="#" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Products</a>
-                        <a href="#" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Food & Drinks</a>
+                        <a href="{{ route('dashboard') }}"
+                            class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Home</a>
+                        <a href="{{ route('user.tables') }}"
+                            class="text-yellow-400 font-bold px-3 py-2 rounded-md">Tables</a>
+                        <a href="#"
+                            class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Events</a>
+                        <a href="#"
+                            class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Products</a>
+                        <a href="#"
+                            class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Food
+                            & Drinks</a>
                     </div>
                 </div>
 
@@ -35,9 +44,8 @@
                 <div class="relative">
                     <button class="flex items-center space-x-3 focus:outline-none" id="user-menu-button">
                         <div class="flex items-center">
-                            <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : '/api/placeholder/40/40' }}" 
-                                 alt="Profile" 
-                                 class="h-8 w-8 rounded-full object-cover border-2 border-yellow-400"/>
+                            <img src="{{ Auth::user()->photo ? asset('storage/' . Auth::user()->photo) : '/api/placeholder/40/40' }}"
+                                alt="Profile" class="h-8 w-8 rounded-full object-cover border-2 border-yellow-400" />
                             <div class="ml-3 hidden md:block text-left">
                                 <p class="text-sm font-medium text-white">{{ Auth::user()->name }}</p>
                                 <p class="text-xs text-gray-400">Member</p>
@@ -46,14 +54,21 @@
                     </button>
 
                     <!-- Dropdown Menu -->
-                    <div class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700" id="user-menu">
+                    <div class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700"
+                        id="user-menu">
                         <div class="py-1">
-                            <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-yellow-400">Profile Settings</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-yellow-400">Booking History</a>
+                            <a href="{{ route('user.profile') }}"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-yellow-400">Profile
+                                Settings</a>
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-yellow-400">Booking
+                                History</a>
                             <div class="border-t border-gray-700 mt-1"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Sign out</button>
+                                <button type="submit"
+                                    class="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700">Sign
+                                    out</button>
                             </form>
                         </div>
                     </div>
@@ -68,19 +83,25 @@
             <!-- Booking Form Card -->
             <div class="relative">
                 <!-- Decorative Elements -->
-                <div class="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-xl transform rotate-1"></div>
-                <div class="absolute inset-0 bg-gradient-to-l from-purple-400/10 to-purple-600/10 rounded-xl transform -rotate-1"></div>
-                
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-xl transform rotate-1">
+                </div>
+                <div
+                    class="absolute inset-0 bg-gradient-to-l from-purple-400/10 to-purple-600/10 rounded-xl transform -rotate-1">
+                </div>
+
                 <!-- Main Form Container -->
                 <div class="relative bg-gray-800/80 backdrop-blur rounded-xl shadow-xl p-8">
                     <!-- Form Header -->
                     <div class="mb-8 text-center">
                         <h2 class="text-2xl font-bold text-yellow-400 mb-2">Book Your Table</h2>
-                        <p class="text-gray-400">Table #{{ $table->number }} - Capacity: {{ $table->capacity }} people</p>
+                        <p class="text-gray-400">Table #{{ $table->number }} - Capacity: {{ $table->capacity }} people
+                        </p>
                     </div>
 
                     <!-- Booking Form -->
-                    <form method="POST" action="{{ route('user.tables.book', ['table_id' => $table->id]) }}" class="space-y-6">
+                    <form method="POST" action="{{ route('user.tables.book', ['table_id' => $table->id]) }}"
+                        class="space-y-6">
                         @csrf
 
                         <!-- Current Table Info -->
@@ -88,71 +109,77 @@
                             <div class="flex justify-between items-center">
                                 <div>
                                     <p class="text-sm text-gray-400">Price per hour</p>
-                                    <p class="text-lg font-bold text-yellow-400">Rp {{ number_format($table->price, 0, ',', '.') }}</p>
+                                    <p class="text-lg font-bold text-yellow-400">Rp
+                                        {{ number_format($table->price, 0, ',', '.') }}</p>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-400">Status</p>
-                                    <span class="px-3 py-1 rounded-full text-sm font-semibold {{ strtolower($table->status) == 'open' ? 'bg-green-900/80 text-green-300' : 'bg-red-900/80 text-red-300' }}">
+                                    <span
+                                        class="px-3 py-1 rounded-full text-sm font-semibold {{ strtolower($table->status) == 'open' ? 'bg-green-900/80 text-green-300' : 'bg-red-900/80 text-red-300' }}">
                                         {{ $table->status }}
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Datetime Picker -->
-                        <div class="space-y-2">
-                            <label for="datetime" class="block text-sm font-medium text-gray-300">Choose Date & Time</label>
-                            <input type="datetime-local" 
-                                   name="datetime" 
-                                   id="datetime" 
-                                   value="{{ old('datetime') }}"
-                                   class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                                   required>
-                        </div>
+                        @if (strtolower($table->status) == 'open')
+                            <!-- Datetime Picker -->
+                            <div class="space-y-2">
+                                <label for="datetime" class="block text-sm font-medium text-gray-300">Choose Date &
+                                    Time</label>
+                                <input type="datetime-local" name="datetime" id="datetime"
+                                    value="{{ old('datetime') }}"
+                                    class="w-full bg-gray-900/50 border border-gray-700 dark:[color-scheme:dark] text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                                    required>
+                            </div>
 
-                        <!-- Duration Selector -->
-                        <div class="space-y-2">
-                            <label for="duration" class="block text-sm font-medium text-gray-300">Select Duration</label>
-                            <select name="duration" 
-                                    id="duration"
+                            <!-- Duration Selector -->
+                            <div class="space-y-2">
+                                <label for="duration" class="block text-sm font-medium text-gray-300">Select
+                                    Duration</label>
+                                <select name="duration" id="duration"
                                     class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                                     required>
-                                <option value="" disabled selected>Choose your duration</option>
-                                <option value="180" {{ old('duration') == '180' ? 'selected' : '' }}>Package - 3 Hours</option>
-                                <option value="open" {{ old('duration') == 'open' ? 'selected' : '' }}>Open Duration</option>
-                            </select>
-                        </div>
+                                    <option value="none" disabled selected>Choose your duration</option>
+                                    <option value="3-hour-package"
+                                        {{ old('duration') == '3-hour-package' ? 'selected' : '' }}>Package - 3
+                                        Hours</option>
+                                    <option value="open" {{ old('duration') == 'open' ? 'selected' : '' }}>Open
+                                        Duration</option>
+                                </select>
+                            </div>
 
-                        <!-- Custom Duration Input (Hidden by default) -->
-                        <div id="open-duration-container" class="space-y-2 hidden">
-                            <label for="open-duration" class="block text-sm font-medium text-gray-300">Specify Duration (minutes)</label>
-                            <input type="number" 
-                                   name="open_duration" 
-                                   id="open-duration"
-                                   min="30"
-                                   step="30"
-                                   placeholder="Enter duration in minutes"
-                                   class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                            <p class="text-sm text-gray-400">Minimum duration: 30 minutes</p>
-                        </div>
+                            {{-- <!-- Custom Duration Input (Hidden by default) -->
+                            <div id="open-duration-container" class="space-y-2 hidden">
+                                <label for="open-duration" class="block text-sm font-medium text-gray-300">Specify
+                                    Duration (minutes)</label>
+                                <input type="number" name="open-duration" id="open-duration" min="30"
+                                    step="30" placeholder="Enter duration in minutes"
+                                    class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                                <p class="text-sm text-gray-400">Minimum duration: 30 minutes</p>
+                            </div> --}}
 
-                        <!-- Price Estimation -->
-                        <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4 hidden">
-                            <h4 class="text-sm font-medium text-gray-300 mb-2">Estimated Price</h4>
-                            <p class="text-xl font-bold text-yellow-400" id="estimated-price">Rp 0</p>
-                            <p class="text-xs text-gray-400 mt-1">Final price may vary based on actual duration</p>
-                        </div>
-
+                            <!-- Price Estimation -->
+                            <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
+                                <h4 class="text-sm font-medium text-gray-300 mb-2">Estimated Price</h4>
+                                <p class="text-xl font-bold text-yellow-400" id="estimated-price">Rp 0</p>
+                                <p class="text-xs text-gray-400 mt-1" id="estimated-price-info">Final price may vary based on actual duration</p>
+                            </div>
+                        @elseif (strtolower($table->status) == 'closed')
+                            <!-- fill this section with appropirate and necessary section if a table is closed -->
+                        @endif
                         <!-- Action Buttons -->
                         <div class="flex space-x-4 pt-4">
-                            <a href="{{ route('user.tables') }}" 
-                               class="flex-1 px-6 py-3 bg-gray-700 text-white rounded-lg text-center hover:bg-gray-600 transition-colors duration-200">
-                                Cancel
+                            <a href="{{ route('user.tables') }}"
+                                class="flex-1 px-6 py-3 bg-gray-700 text-white rounded-lg text-center hover:bg-gray-600 transition-colors duration-200">
+                                {{ strtolower($table->status) == 'open' ? 'Cancel' : 'View Available Tables' }}
                             </a>
-                            <button type="submit" 
+                            @if (strtolower($table->status) == 'open')
+                                <button type="submit"
                                     class="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all duration-200">
-                                Confirm Booking
-                            </button>
+                                    Confirm Booking
+                                </button>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -163,20 +190,27 @@
                 <h3 class="text-lg font-semibold text-yellow-400 mb-4">Booking Information</h3>
                 <ul class="space-y-2 text-gray-300">
                     <li class="flex items-start space-x-2">
-                        <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <span>Bookings must be made at least 1 hour in advance</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                        <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         <span>Please arrive 15 minutes before your booking time</span>
                     </li>
                     <li class="flex items-start space-x-2">
-                        <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                            </path>
                         </svg>
                         <span>Payment must be made upon arrival</span>
                     </li>
@@ -188,44 +222,73 @@
     <script>
         // Duration selector logic
         const durationSelect = document.getElementById('duration');
-        const openDurationContainer = document.getElementById('open-duration-container');
-        const openDurationInput = document.getElementById('open-duration');
+        // const openDurationContainer = document.getElementById('open-duration-container');
+        // const openDurationInput = document.getElementById('open-duration');
         const priceEstimation = document.getElementById('price-estimation');
         const estimatedPriceDisplay = document.getElementById('estimated-price');
+        const estimatedPriceDisplayInfo = document.getElementById('estimated-price-info');
         const pricePerHour = {{ $table->price }};
 
+        document.addEventListener('DOMContentLoaded', function() {
+            estimatedPriceDisplayInfo.classList.add('hidden');
+            estimatedPriceDisplay.textContent = `Please select a duration first!`;
+        });
+        
         durationSelect.addEventListener('change', function() {
-            if (this.value === 'open') {
-                openDurationContainer.classList.remove('hidden');
-                openDurationInput.required = true;
-                priceEstimation.classList.remove('hidden');
-            } else {
-                openDurationContainer.classList.add('hidden');
-                openDurationInput.required = false;
-                // Calculate fixed package price
-                const hours = 3; // 3-hour package
+            if (this.value === 'none') {
+                estimatedPriceDisplayInfo.classList.add('hidden');
+                estimatedPriceDisplay.textContent = `Please select a duration first!`;
+            } else if (this.value === 'open') {
+                estimatedPriceDisplayInfo.classList.remove('hidden');
+                estimatedPriceDisplay.textContent =
+                `Price will be calculated based on actual duration at the end of session!`;
+                estimatedPriceDisplayInfo.textContent =
+                `Base rate: Rp ${numberFormat(pricePerHour)} per hour`;
+            } else if (this.value === '3-hour-package') {
+                estimatedPriceDisplayInfo.classList.remove('hidden');
+                const hours = 3;
                 const estimatedPrice = pricePerHour * hours;
                 estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
-                priceEstimation.classList.remove('hidden');
+                estimatedPriceDisplayInfo.textContent = `Fixed price for the 3-hour package`;
             }
         });
 
-        
+        // durationSelect.addEventListener('change', function() {
+        // if (this.value === 'open') {
+        //     openDurationContainer.classList.remove('hidden');
+        //     openDurationInput.required = true;
+        //     const hours = 3; // 3-hour package
+        //     const estimatedPrice = pricePerHour * hours;
+        //     estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
+        // } else {
+        //     openDurationContainer.classList.add('hidden');
+        //     openDurationInput.required = false;
+        //     // Calculate fixed package price
+        //     const hours = 3; // 3-hour package
+        //     const estimatedPrice = pricePerHour * hours;
+        //     estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
+        //     priceEstimation.classList.remove('hidden');
+        // }
+        // });
 
         // Calculate estimated price for open duration
-        openDurationInput.addEventListener('input', function() {
-            const minutes = parseInt(this.value) || 0;
-            const hours = minutes / 60;
-            const estimatedPrice = pricePerHour * hours;
-            estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
-        });
+        // openDurationInput.addEventListener('input', function() {
+        //     const minutes = parseInt(this.value) || 0;
+        //     if (minutes >= 30) {
+        //         priceEstimation.classList.remove('hidden');
+        //     } else
+        //         priceEstimation.classList.add('hidden');
+        //     const hours = minutes / 60;
+        //     const estimatedPrice = pricePerHour * hours;
+        //     estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
+        // });
 
         // Form submission handling
         const bookingForm = document.querySelector('form');
         bookingForm.addEventListener('submit', function(e) {
             const selectedDateTime = new Date(document.getElementById('datetime').value);
             const now = new Date();
-            
+
             // Add 1 hour to current time for minimum booking time
             const minBookingTime = new Date(now.getTime() + (60 * 60 * 1000));
 
@@ -261,7 +324,7 @@
         // User menu toggle
         const userMenuButton = document.getElementById('user-menu-button');
         const userMenu = document.getElementById('user-menu');
-        
+
         userMenuButton.addEventListener('click', () => {
             userMenu.classList.toggle('hidden');
         });
@@ -306,16 +369,17 @@
             const datetimeInput = document.getElementById('datetime');
             const now = new Date();
             const minDateTime = new Date(now.getTime() + (60 * 60 * 1000)); // Add 1 hour
-            
+
             // Format datetime for input
             const year = minDateTime.getFullYear();
             const month = String(minDateTime.getMonth() + 1).padStart(2, '0');
             const day = String(minDateTime.getDate()).padStart(2, '0');
             const hours = String(minDateTime.getHours()).padStart(2, '0');
             const minutes = String(minDateTime.getMinutes()).padStart(2, '0');
-            
+
             datetimeInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
         });
     </script>
 </body>
+
 </html>

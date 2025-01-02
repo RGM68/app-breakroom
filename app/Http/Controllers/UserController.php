@@ -60,7 +60,7 @@ class UserController extends Controller
             if ($user->photo) {
                 Storage::delete($user->photo);
             }
-            $directory = 'photos';
+            $directory = 'photos/profiles';
             $filename = time() . '.' . $request->file('photo')->getClientOriginalExtension();
         
             $path = $request->file('photo')->storeAs($directory, $filename, 'public');
@@ -96,13 +96,14 @@ class UserController extends Controller
         // $request->validate([
         //     'duration' => 'required|integer',
         // ]);
+        dd($request);
         $table = Table::findOrFail($table_id);
         TableBooking::create([
             'user_id' => Auth::id(),
             'table_id' => $table_id,
             'booking_time' => $request->input('datetime'),
             // 'duration' => 3,
-            'duration' => $request->input('duration'),
+            'duration' => $request->input('open-duration'),
             'status' => 'active',
         ]);
         return redirect()->route('user.tables')->with(['booking_status' => 'Berhasil booking table ' . $table->number . '!']);

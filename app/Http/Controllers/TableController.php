@@ -36,7 +36,7 @@ class TableController extends Controller
     public function store(Request $request)
     {
         //
-        $path = $request->file('image')->storePublicly('photos', 'public');
+        $path = $request->file('image')->store('photos/tables');
         $ext = $request->file('image')->extension();
         $table = new Table();
         $table->number = $request->number;

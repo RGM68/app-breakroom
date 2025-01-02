@@ -8,7 +8,7 @@
 
 <div class="edit-table-container w-50" style="margin: auto; background-color: #BDCBFF; padding: 20px; border-radius: 10px">
     <h1>Edit Table #{{$table->number}}</h1>
-    <img src="{{asset(path: $image)}}" class="text-center my-2" style="width: 150px; border-radius: 10px"/><br />
+    <img src="{{asset('storage/'. $table->image)}}" class="text-center my-2" style="width: 150px; border-radius: 10px"/><br />
     <form class="form" method="POST" action="/admin/table/{{ $table->id }}">
         @csrf
         @method('PUT')
