@@ -204,6 +204,7 @@ Route::middleware(['auth'])->group(function () {
     // Food & Drinks
     Route::get('/food-and-drinks', [FoodAndDrinkController::class, 'index'])->name('food-and-drinks.index');
     Route::post('/food-and-drinks/order', [FoodAndDrinkController::class, 'order'])->name('food-and-drinks.order');
+    Route::get('/food-drinks/{id}', [FoodAndDrinkController::class, 'details'])->name('food-drinks.details');
 
     // Waiting List
     Route::get('/waiting-list', [WaitingListController::class, 'index'])->name('waiting-list.index');
@@ -220,6 +221,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Public Routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{id}', [ProductController::class, 'details'])->name('products.details');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/bookings/check', [BookingController::class, 'checkAvailability'])->name('bookings.check');
