@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/EventController.php
 namespace App\Http\Controllers;
 
 use App\Models\Event;
@@ -9,11 +8,20 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    public function userIndex()
-    {
-        $events = Event::upcoming()->get();
-        return view('user.events.index', compact('events'));
+    public function index()
+{
+    // Get all available events ordered by date
+    $events = Event::where('status', 'Open')
+        ->where('date', '>=', now())  // Only show future events
+        ->orderBy('date', 'asc')
+        ->get();
+        
+    foreach ($events as $event) {
+        $event->image_url = Storage::url($event->image);
     }
+
+    return view('user.events.index', compact('events'));
+}
 
     public function details($id)
     {

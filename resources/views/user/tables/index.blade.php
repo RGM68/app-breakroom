@@ -22,12 +22,12 @@
                     </div>
                     
                     <!-- Main Navigation -->
-                    <div class="hidden md:flex ml-10 space-x-6">
-                        <a href="{{ route('dashboard') }}" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Home</a>
-                        <a href="{{ route('user.tables') }}" class="text-yellow-400 font-bold px-3 py-2 rounded-md">Tables</a>
-                        <a href="#" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Events</a>
-                        <a href="#" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Products</a>
-                        <a href="#" class="text-gray-300 hover:text-yellow-400 px-3 py-2 rounded-md transition-colors duration-200">Food & Drinks</a>
+                    <div class="hidden md:flex space-x-6">
+                        <a href="{{ route('dashboard') }}" class="hover:text-yellow-400 transition-colors">Home</a>
+                        <a href="{{ route('user.tables') }}" class="hover:text-yellow-400 transition-colors">Tables</a>
+                        <a href="{{route('user.event.index')}}" class="hover:text-yellow-400 transition-colors">Events</a>
+                        <a href="{{route('food-and-drinks.index')}}" class="hover:text-yellow-400 transition-colors">Food & Drinks</a>
+                        <a href="{{route('products.index')}}" class="hover:text-yellow-400 transition-colors">Products</a>
                     </div>
                 </div>
 

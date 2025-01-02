@@ -80,7 +80,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::post('/tables/book/{table_id}', [UserController::class, 'bookTables'])->name('tables.book');
 
     // EVENTS
-    Route::get('/events', [EventController::class, 'userIndex'])->name('event.index');
+    Route::get('/events', [EventController::class, 'index'])->name('event.index');
     Route::get('/events/{event_id}', [EventController::class, 'details'])->name('event.details');
     Route::post('/events/{event_id}/register', [EventController::class, 'register'])->name('event.register');
     Route::post('/events/{event_id}/cancel', [EventController::class, 'cancel'])->name('event.cancel');
@@ -227,6 +227,7 @@ Route::post('/products', [ProductController::class, 'store'])->name('products.st
 Route::get('/bookings/check', [BookingController::class, 'checkAvailability'])->name('bookings.check');
 Route::post('/bookings', [BookingController::class, 'book'])->name('bookings.book');
 Route::get('/bookings/history', [BookingController::class, 'history'])->name('bookings.history');
+
 // Route::get('/events', [EventController::class, 'index'])->name('event.index');
 // Route::get('/events/{id}', [EventController::class, 'details'])->name('event.details');
 // Route::post('/events/{event}/register', [EventController::class, 'register'])->name('event.register');
