@@ -20,10 +20,10 @@
         <textarea class="form-control" name="description" id="description">{{$event->description}}</textarea>
 
         <label for="date" class="form-label">Date</label> 
-        <input class="form-control" type="date" name="date" id="date" value="{{$event->date}}" required><br />
+        <input class="form-control" type="date" name="date" id="date" value="{{ \Carbon\Carbon::parse($event->date)->format('Y-m-d') }}" required><br />
         
         <label for="time" class="form-label">Time</label> 
-        <input class="form-control" type="time" name="time" id="time" value="{{$event->time}}" required><br />
+        <input class="form-control" type="time" name="time" id="time" value="{{ \Carbon\Carbon::parse($event->time)->format('H:i') }}" required><br />
 
         <label for="location" class="form-label">Location</label> 
         <input class="form-control" type="text" name="location" id="location" value="{{$event->location}}" required><br />

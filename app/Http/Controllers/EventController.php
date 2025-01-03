@@ -9,17 +9,19 @@ use Illuminate\Support\Facades\Storage;
 class EventController extends Controller
 {
     public function index()
-{
-    // Get all events, sorted by newest to oldest date
-    $events = Event::orderBy('date', 'desc')->get();
+    {
+        // Get all events, sorted by newest to oldest date
+        $events = Event::whereDate('date', '>=', now())
+        ->orderBy('date', 'asc')
+        ->get();
 
-    // Ensure image URLs are properly generated
-    foreach ($events as $event) {
-        $event->image_url = $event->image ? Storage::url($event->image) : null;
+        // Ensure image URLs are properly generated
+        foreach ($events as $event) {
+            $event->image_url = $event->image ? Storage::url($event->image) : null;
+        }
+
+        return view('user.events.index', compact('events'));
     }
-
-    return view('user.events.index', compact('events'));
-}
 
     
 
@@ -74,7 +76,7 @@ class EventController extends Controller
     public function show($id)
     {
         //
-        $event = Event::findOrFail($id);
+        $event = Event::with(['eventRegistration.user'])->findOrFail($id);
         $image = Storage::url($event->image);
         return view('admin.event.show', [
             'event' => $event,
@@ -136,6 +138,15 @@ class EventController extends Controller
         $event = Event::findOrFail($eventId);
         $user = auth()->user();
         
+        $readyParticipantsCount = $event->eventRegistration()
+            ->where('status', 'Ready')
+            ->count();
+
+        // Check if event is full (only counting ready participants)
+        if ($readyParticipantsCount >= $event->max_participants) {
+            return back()->with('error', 'Event sudah penuh.');
+        }
+        
         $registration = $event->eventRegistration()
             ->where('user_id', $user->id)
             ->first();
@@ -144,10 +155,17 @@ class EventController extends Controller
             if ($registration->status === 'Ready') {
                 return back()->with('error', 'Anda sudah terdaftar di event ini.');
             } elseif ($registration->status === 'Cancelled') {
+                // Check again if event is full before reactivating
+                if ($readyParticipantsCount >= $event->max_participants) {
+                    return back()->with('error', 'Maaf, event sudah penuh.');
+                }
+                
                 $registration->update(['status' => 'Ready']);
                 return back()->with('success', 'Registrasi Anda berhasil.');
             }
         }
+
+        // If no existing registration and event not full, create new registration
         $event->eventRegistration()->create([
             'user_id' => $user->id,
             'status' => 'Ready', 
