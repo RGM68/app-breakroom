@@ -73,22 +73,24 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // Profile
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
-    
+
     // Tables
     Route::get('/tables', [UserController::class, 'tables'])->name('tables');
     Route::get('/tables/book/{table_id}', [UserController::class, 'bookTablesView'])->name('tables.bookView');
     Route::post('/tables/book/{table_id}', [UserController::class, 'bookTables'])->name('tables.book');
+    Route::get('/tables/active-sessions', [TableBookingController::class, 'getActiveSessions'])
+        ->name('tables.active-sessions');
 
     // EVENTS
     Route::get('/events', [EventController::class, 'index'])->name('event.index');
     Route::get('/events/{event_id}', [EventController::class, 'details'])->name('event.details');
     Route::post('/events/{event_id}/register', [EventController::class, 'register'])->name('event.register');
     Route::post('/events/{event_id}/cancel', [EventController::class, 'cancel'])->name('event.cancel');
-    
+
     //Loyyalty
     Route::get('/loyalty_program', [UserController::class, 'loyaltyProgramIndex'])->name('loyalty_program.index');
     Route::post('/loyalty/redeem-voucher/{voucher}', [LoyaltyProgramController::class, 'redeemVoucher'])
-    ->name('loyalty.redeem-voucher');
+        ->name('loyalty.redeem-voucher');
     // Resource Routes
 });
 
@@ -122,8 +124,14 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
         // Table Bookings
         Route::get('/bookings', [TableBookingController::class, 'adminIndex'])->name('booking.index');
+        Route::post('/bookings/{booking}/start', [TableBookingController::class, 'startSession'])
+            ->name('bookings.start-session');
         Route::get('/booking/{id}/finish', [TableBookingController::class, 'finish'])->name('booking.finish');
         Route::get('/booking/{id}/cancel', [TableBookingController::class, 'cancel'])->name('booking.cancel');
+        Route::get('/bookings/prices', [TableBookingController::class, 'getUpdatedPrices'])
+            ->name('bookings.prices');
+        Route::get('/bookings/durations', [TableBookingController::class, 'getUpdatedDurations'])
+            ->name('bookings.durations');
 
 
         // Events
@@ -181,13 +189,13 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         Route::post('/users/{id}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
 
         // Route::post('/users/create-admin', [AdminController::class, 'createAdmin'])->name('users.create-admin');
-        
+
         // VOUCHERS
         Route::get('/vouchers', [VoucherController::class, 'adminIndex'])->name('voucher.adminIndex');
         Route::get('/voucher/create_voucher', [VoucherController::class, 'create_voucher'])->name('voucher.create');
         Route::post('/voucher/create_voucher', [VoucherController::class, 'store'])->name('voucher.store');
         Route::put('/voucher/{id}/status', [VoucherController::class, 'updateStatus'])
-        ->name('voucher.updateStatus');
+            ->name('voucher.updateStatus');
         Route::get('/voucher/{id}/edit', [VoucherController::class, 'edit'])->name('voucher.edit');
         Route::put('/voucher/{id}', [VoucherController::class, 'update'])->name('voucher.update');
     });

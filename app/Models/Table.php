@@ -16,7 +16,22 @@ class Table extends Model
         'price',
         'image',
     ];
-    public function tableBookings(){
+    public function tableBookings()
+    {
+        return $this->hasMany(TableBooking::class);
+    }
+
+    public function activeBooking()
+    {
+        return $this->hasOne(TableBooking::class)
+            ->where('status', 'active')
+            ->where('is_active', true)
+            ->latest();
+    }
+
+    // Also add general bookings relationship
+    public function bookings()
+    {
         return $this->hasMany(TableBooking::class);
     }
 }

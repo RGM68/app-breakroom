@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LoyaltyTier;
 use App\Models\Table;
-use App\Models\TableBooking;
-use App\Models\UserVoucher;
 use App\Models\Voucher;
+use App\Models\LoyaltyTier;
+use App\Models\UserVoucher;
+use App\Models\TableBooking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;  
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,14 +22,16 @@ class UserController extends Controller
         return view('user.dashboard', compact('tables'));
     }
 
-    public function profile() {
+    public function profile()
+    {
         $user = auth()->user();
 
         // Pass the $user variable to the 'user.profile.profile' view
         return view('user.profile.profile', compact('user'));
     }
 
-    public function updateProfile(Request $request) {
+    public function updateProfile(Request $request)
+    {
         $user = auth()->user();
 
         $request->validate([
@@ -66,9 +69,9 @@ class UserController extends Controller
             }
             $directory = 'photos/profiles';
             $filename = time() . '.' . $request->file('photo')->getClientOriginalExtension();
-        
+
             $path = $request->file('photo')->storeAs($directory, $filename, 'public');
-        
+
             $user->photo = $path;
         }
 
@@ -79,7 +82,7 @@ class UserController extends Controller
 
     public function tables()
     {
-        $tables = Table::orderBy('capacity', 'desc')->get();
+        $tables = Table::with('activeBooking')->orderBy('price', 'desc')->get();
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }
@@ -94,7 +97,7 @@ class UserController extends Controller
         $applicableVouchers = UserVoucher::where('user_id', $user->id)
             ->where('is_used', false)
             ->where('expires_at', '>', now())
-            ->whereHas('voucher', function($query) {
+            ->whereHas('voucher', function ($query) {
                 $query->where('voucher_type', 'table_discount')
                     ->where('is_active', true);
             })
@@ -113,7 +116,7 @@ class UserController extends Controller
     {
         $request->validate([
             'datetime' => 'required|date|after:+1 hour',
-            'duration' => 'required|in:60,120,180', // Valid package durations in minutes
+            'duration' => 'required',
             'voucher_id' => 'nullable|exists:user_vouchers,id'
         ]);
 
@@ -121,7 +124,7 @@ class UserController extends Controller
             $table = Table::findOrFail($table_id);
             $user = Auth::user();
             $userVoucher = null;
-            
+
             // Calculate original price
             $duration = intval($request->duration); // Duration in minutes
             $originalPrice = ($duration / 60) * $table->price;
@@ -156,11 +159,12 @@ class UserController extends Controller
             // Calculate final price
             $finalPrice = $originalPrice - $loyaltyDiscount - $voucherDiscount;
 
-            DB::transaction(function() use ($user, $table, $request, $duration, $originalPrice, $loyaltyDiscount, $voucherDiscount, $finalPrice, $userVoucher) {
+            DB::transaction(function () use ($user, $table, $request, $duration, $originalPrice, $loyaltyDiscount, $voucherDiscount, $finalPrice, $userVoucher) {
                 // Create booking
                 $booking = TableBooking::create([
                     'user_id' => $user->id,
                     'table_id' => $table->id,
+                    'booking_type' => $request->duration,
                     'booking_time' => $request->datetime,
                     'duration' => $duration,
                     'original_price' => $originalPrice,
@@ -168,8 +172,10 @@ class UserController extends Controller
                     'voucher_discount' => $voucherDiscount,
                     'final_price' => $finalPrice,
                     'used_voucher_id' => $userVoucher ? $userVoucher->id : null,
-                    'status' => 'active'
+                    'status' => 'pending'
                 ]);
+
+                // 'duration' => $request->input('open-duration'),
 
                 // Mark voucher as used if one was applied
                 if ($userVoucher) {
@@ -181,32 +187,17 @@ class UserController extends Controller
 
             return redirect()->route('user.tables')
                 ->with('success', sprintf(
-                    'Successfully booked Table %d for %d hour%s!', 
-                    $table->number, 
-                    $duration/60,
-                    $duration/60 > 1 ? 's' : ''
+                    'Successfully booked Table %d for %d hour%s!',
+                    $table->number,
+                    $duration / 60,
+                    $duration / 60 > 1 ? 's' : ''
                 ));
-
         } catch (\Exception $e) {
-            \Log::error('Error booking table: ' . $e->getMessage());
+            Log::error('Error booking table: ' . $e->getMessage());
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Failed to book table. Please try again.');
         }
-        // $request->validate([
-        //     'duration' => 'required|integer',
-        // ]);
-        dd($request);
-        $table = Table::findOrFail($table_id);
-        TableBooking::create([
-            'user_id' => Auth::id(),
-            'table_id' => $table_id,
-            'booking_time' => $request->input('datetime'),
-            // 'duration' => 3,
-            'duration' => $request->input('open-duration'),
-            'status' => 'active',
-        ]);
-        return redirect()->route('user.tables')->with(['booking_status' => 'Berhasil booking table ' . $table->number . '!']);
     }
 
     public function loyaltyProgramIndex()
@@ -214,20 +205,20 @@ class UserController extends Controller
         //
         $user = auth()->user();
         $vouchers = Voucher::where('is_active', true)
-                    ->where(function($query) {
-                        $query->where('stock', '>', 0)
-                            ->orWhere('stock', -1);
-                    })
-                    ->orderByRaw('CASE 
+            ->where(function ($query) {
+                $query->where('stock', '>', 0)
+                    ->orWhere('stock', -1);
+            })
+            ->orderByRaw('CASE 
                     WHEN points_required <= ? THEN 0 
                     ELSE 1 
                     END', [$user->loyalty_points])  // First sort by affordability
-                    ->orderBy('points_required', 'asc')  // Then sort by points needed (lowest first)
-                    ->get();
+            ->orderBy('points_required', 'asc')  // Then sort by points needed (lowest first)
+            ->get();
         $userVouchers = UserVoucher::where('user_id', $user->id)
-                            ->with('voucher')
-                            ->orderBy('expires_at', 'desc')
-                            ->get();
+            ->with('voucher')
+            ->orderBy('expires_at', 'desc')
+            ->get();
         return view('user.loyalty.index', compact('user', 'vouchers', 'userVouchers'));
     }
 }
