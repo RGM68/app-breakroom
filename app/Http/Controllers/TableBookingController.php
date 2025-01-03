@@ -6,6 +6,7 @@ use App\Models\UserVoucher;
 use App\Models\TableBooking;
 use Illuminate\Http\Request;
 use App\Models\PointTransaction;
+use App\Services\BookingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -29,7 +30,7 @@ class TableBookingController extends Controller
                 $booking->duration_display = floor($booking->final_duration / 60) . 'h ' . ($booking->final_duration % 60) . 'm';
             } elseif ($booking->status === 'active') {
                 $startTime = \Carbon\Carbon::parse($booking->started_at);
-                $durationInSeconds = $startTime->diffInSeconds(now(), false);
+                $durationInSeconds = $startTime->diffInSeconds(now());
 
                 // Calculate hours, minutes, and seconds
                 $hours = floor($durationInSeconds / 3600);
@@ -111,11 +112,44 @@ class TableBookingController extends Controller
 
     public function cancel($id)
     {
-        $booking = TableBooking::with(['user', 'table'])->findOrFail($id);
-        $booking->status = 'cancelled';
-        $booking->save();
+        try {
+            $booking = TableBooking::with(['user', 'table'])->findOrFail($id);
 
-        return redirect('/admin/bookings')->with('success', 'Booking has been marked as cancelled.');
+            // If this was an active session, calculate final duration and price
+            if ($booking->status === 'active' && $booking->started_at) {
+                $duration = now()->diffInMinutes($booking->started_at);
+                $finalPrice = $booking->booking_type === '3-hour-package'
+                    ? $booking->final_price
+                    : ($duration / 60) * $booking->table->price;
+
+                $booking->update([
+                    'status' => 'cancelled',
+                    'end_time' => now(),
+                    'final_duration' => $duration,
+                    'final_price' => $finalPrice,
+                    'is_active' => false
+                ]);
+
+                // Free up the table
+                $booking->table->update(['status' => 'Open']);
+            } else {
+                // For pending bookings, just mark as cancelled
+                $booking->update([
+                    'status' => 'cancelled',
+                    'is_active' => false
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Booking has been cancelled successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error cancelling booking: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function startSession(Request $request, $id)
@@ -160,58 +194,6 @@ class TableBookingController extends Controller
         }
     }
 
-    // public function endSession($id)
-    // {
-    //     $booking = TableBooking::with(['user', 'table', 'user.loyaltyTier'])->findOrFail($id);
-
-    //     if ($booking->status !== 'active') {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'This booking cannot be ended'
-    //         ], 400);
-    //     }
-
-    //     try {
-    //         DB::beginTransaction();
-
-    //         $duration = now()->diffInMinutes($booking->started_at);
-    //         $finalPrice = $booking->booking_type === '3-hour-package'
-    //             ? $booking->final_price
-    //             : ($duration / 60) * $booking->table->price;
-
-    //         $booking->update([
-    //             'status' => 'completed',
-    //             'end_time' => now(),
-    //             'final_duration' => $duration,
-    //             'final_price' => $finalPrice,
-    //             'is_active' => false
-    //         ]);
-
-    //         $booking->table->update([
-    //             'status' => 'Open'
-    //         ]);
-
-    //         $pointsEarned = floor($finalPrice / 10000); // 1 point per 10,000
-    //         $booking->user->increment('loyalty_points', $pointsEarned);
-
-    //         DB::commit();
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Session ended successfully',
-    //             'duration' => $duration,
-    //             'final_price' => $finalPrice,
-    //             'points_earned' => $pointsEarned
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Error ending session'
-    //         ], 500);
-    //     }
-    // }
-
     public function endSession($id)
     {
         $booking = TableBooking::with(['user', 'table', 'user.loyaltyTier'])->findOrFail($id);
@@ -226,7 +208,6 @@ class TableBookingController extends Controller
         try {
             DB::beginTransaction();
 
-            // Calculate duration and original price
             $duration = now()->diffInMinutes($booking->started_at);
             $originalPrice = $booking->booking_type === '3-hour-package'
                 ? $booking->final_price
@@ -324,7 +305,7 @@ class TableBookingController extends Controller
 
         foreach ($bookings as $booking) {
             $startTime = \Carbon\Carbon::parse($booking->started_at);
-            $duration = $startTime->diffInMinutes(now(), false);
+            $duration = $startTime->diffInMinutes(now());
             $totalPrice = $booking->booking_type === '3-hour-package'
                 ? $booking->final_price
                 : ($duration / 60) * $booking->table->price;
@@ -340,39 +321,18 @@ class TableBookingController extends Controller
         }));
     }
 
-    // public function getUpdatedDurations()
-    // {
-    //     $bookings = TableBooking::where('status', 'active')->get();
-
-    //     foreach ($bookings as $booking) {
-    //         $startTime = \Carbon\Carbon::parse($booking->started_at);
-    //         $duration = $startTime->diffInMinutes(now(), false);
-
-    //         $booking->duration_display = floor($duration / 60) . 'h ' . ($duration % 60) . 'm';
-    //     }
-
-    //     return response()->json($bookings->map(function ($booking) {
-    //         return [
-    //             'id' => $booking->id,
-    //             'duration_display' => $booking->duration_display,
-    //         ];
-    //     }));
-    // }
-
     public function getUpdatedDurations()
     {
         $bookings = TableBooking::where('status', 'active')->get();
 
         foreach ($bookings as $booking) {
             $startTime = \Carbon\Carbon::parse($booking->started_at);
-            $durationInSeconds = $startTime->diffInSeconds(now(), false);
+            $durationInSeconds = $startTime->diffInSeconds(now());
 
-            // Calculate hours, minutes, and seconds
             $hours = floor($durationInSeconds / 3600);
             $minutes = floor(($durationInSeconds % 3600) / 60);
             $seconds = $durationInSeconds % 60;
 
-            // Format the duration string
             $booking->duration_display = "{$hours}h {$minutes}m {$seconds}s";
         }
 
@@ -408,5 +368,60 @@ class TableBookingController extends Controller
             });
 
         return response()->json($activeBookings);
+    }
+
+    public function getOperatingHours(Request $request)
+    {
+        $bookingService = new BookingService();
+        return response()->json($bookingService->getOperatingHours($request->date));
+    }
+
+    public function getUnavailableSlots(Request $request, $table_id)
+    {
+        $bookingService = new BookingService();
+        return response()->json($bookingService->getUnavailableSlots($table_id, $request->date));
+    }
+
+    public function getAvailableSlots($table_id, $date)
+    {
+        try {
+            $isWeekend = \Carbon\Carbon::parse($date)->isWeekend();
+            $openingTime = $isWeekend ? '11:00' : '10:00';
+            $closingTime = $isWeekend ? '01:00' : '00:00';
+
+            // Get bookings for this table and date
+            $bookings = TableBooking::where('table_id', $table_id)
+                ->where('booking_time', $date)
+                ->whereIn('status', ['pending', 'confirmed', 'active'])
+                ->get();
+
+            // Create array of booked time slots
+            $bookedSlots = [];
+            foreach ($bookings as $booking) {
+                $start = \Carbon\Carbon::parse($booking->start_time);
+                $end = \Carbon\Carbon::parse($booking->end_time);
+
+                // Add all 30-minute slots between start and end time
+                while ($start < $end) {
+                    $bookedSlots[] = $start->format('H:i');
+                    $start->addMinutes(30);
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'slots' => $bookedSlots,
+                'operating_hours' => [
+                    'open' => $openingTime,
+                    'close' => $closingTime,
+                    'is_weekend' => $isWeekend
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching time slots'
+            ], 500);
+        }
     }
 }

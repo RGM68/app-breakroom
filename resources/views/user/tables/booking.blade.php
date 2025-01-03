@@ -76,18 +76,6 @@
             </div>
         </div>
     </nav>
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
-    <!-- Main Content -->
 
     <div class="pt-20 pb-12 px-4">
         <div class="max-w-4xl mx-auto">
@@ -114,7 +102,8 @@
                     <form method="POST" action="{{ route('user.tables.book', ['table_id' => $table->id]) }}"
                         class="space-y-6">
                         @csrf
-
+                        <input type="hidden" id="table_id" value="{{ $table->id }}">
+                        <input type="hidden" id="datetime" name="datetime">
                         <!-- Current Table Info -->
                         <div class="bg-gray-900/50 rounded-lg p-4 mb-6">
                             <div class="flex justify-between items-center">
@@ -134,14 +123,34 @@
                         </div>
 
                         @if (strtolower($table->status) == 'open')
-                            <!-- Datetime Picker -->
+
                             <div class="space-y-2">
-                                <label for="datetime" class="block text-sm font-medium text-gray-300">Choose Date &
-                                    Time</label>
-                                <input type="datetime-local" name="datetime" id="datetime"
-                                    value="{{ old('datetime') }}"
-                                    class="w-full bg-gray-900/50 border border-gray-700 dark:[color-scheme:dark] text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                                    required>
+                                <label class="block text-sm font-medium text-gray-300">Select Date</label>
+                                <div class="flex space-x-2 overflow-x-auto pb-2">
+                                    @foreach (range(0, 6) as $dayOffset)
+                                        @php
+                                            $date = now()->addDays($dayOffset);
+                                            $isWeekend = $date->isWeekend();
+                                            $hours = $isWeekend ? '11 AM - 1 AM' : '10 AM - 12 AM';
+                                        @endphp
+                                        <button type="button" data-date="{{ $date->format('Y-m-d') }}"
+                                            data-weekend="{{ $isWeekend ? 'true' : 'false' }}"
+                                            class="date-selector flex-shrink-0 flex flex-col items-center p-4 rounded-lg border-2 transition-all
+                                                {{ $dayOffset === 0 ? 'border-yellow-400 bg-yellow-400/10' : 'border-gray-700 hover:border-yellow-400/50' }}">
+                                            <span class="text-sm text-gray-400">{{ $date->format('D') }}</span>
+                                            <span class="text-lg font-bold text-white">{{ $date->format('d') }}</span>
+                                            <span class="text-xs text-gray-400 mt-1">{{ $hours }}</span>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-300">Select Time</label>
+                                <div class="grid grid-cols-4 gap-2" id="timeSlots">
+                                    <!-- Time slots will be populated by JavaScript -->
+                                </div>
+                                <p class="text-sm text-gray-400" id="operatingHoursInfo"></p>
                             </div>
 
                             <!-- Duration Selector -->
@@ -152,22 +161,13 @@
                                     class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                                     required>
                                     <option value="" disabled selected>Choose your duration</option>
-                                    <option value="180" {{ old('duration') == '180' ? 'selected' : '' }}>Package - 3
+                                    <option value="180" {{ old('duration') == '180' ? 'selected' : '' }}>Package -
+                                        3
                                         Hours</option>
                                     <option value="open" {{ old('duration') == 'open' ? 'selected' : '' }}>Open
                                         Duration</option>
                                 </select>
                             </div>
-
-                            {{-- <!-- Custom Duration Input (Hidden by default) -->
-                            <div id="open-duration-container" class="space-y-2 hidden">
-                                <label for="open-duration" class="block text-sm font-medium text-gray-300">Specify
-                                    Duration (minutes)</label>
-                                <input type="number" name="open-duration" id="open-duration" min="30"
-                                    step="30" placeholder="Enter duration in minutes"
-                                    class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                                <p class="text-sm text-gray-400">Minimum duration: 30 minutes</p>
-                            </div> --}}
 
                             <!-- Loyalty Benefits & Discounts -->
                             <div class="bg-gray-900/50 rounded-lg p-4 mb-6">
@@ -210,42 +210,6 @@
                                 </div>
                             @endif
 
-                            {{-- <!-- Price Estimation -->
-                            <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
-                                <h4 class="text-sm font-medium text-gray-300 mb-2">Price Details</h4>
-                                <div class="space-y-2">
-                                    <!-- Original Price -->
-                                    <div class="flex justify-between items-center">
-                                        <span>Original Price</span>
-                                        <span id="original-price" class="text-gray-400"></span>
-                                    </div>
-
-                                    <!-- Loyalty Discount -->
-                                    @if ($loyaltyTier->table_discount_percentage > 0)
-                                        <div class="flex justify-between items-center text-green-400">
-                                            <span>Loyalty Tier Discount
-                                                ({{ $loyaltyTier->table_discount_percentage }}%)</span>
-                                            <span id="loyalty-discount">-Rp 0</span>
-                                        </div>
-                                    @endif
-
-                                    <!-- Voucher Discount (Hidden by default) -->
-                                    <div id="voucher-discount-row"
-                                        class="flex justify-between items-center text-green-400 hidden">
-                                        <span id="voucher-label">Voucher Discount</span>
-                                        <span id="voucher-discount">-Rp 0</span>
-                                    </div>
-
-                                    <!-- Final Price -->
-                                    <div class="flex justify-between items-center pt-2 border-t border-gray-700">
-                                        <span>Final Price</span>
-                                        <span id="final-price" class="text-xl font-bold text-yellow-400">Rp 0</span>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-gray-400 mt-1" id="price-info"></p>
-                            </div> --}}
-
-                            <!-- Price Estimation -->
                             <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
                                 <h4 class="text-sm font-medium text-gray-300 mb-2">Price Details</h4>
                                 <div id="price-info-container">
@@ -286,13 +250,6 @@
                                 <p class="text-xs text-gray-400 mt-1" id="price-info"></p>
                             </div>
 
-                            <!-- Price Estimation -->
-                            {{-- <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
-                                <h4 class="text-sm font-medium text-gray-300 mb-2">Estimated Price</h4>
-                                <p class="text-xl font-bold text-yellow-400" id="estimated-price">Rp 0</p>
-                                <p class="text-xs text-gray-400 mt-1" id="estimated-price-info">Final price may vary
-                                    based on actual duration</p>
-                            </div> --}}
                         @elseif (strtolower($table->status) == 'closed')
                             <!-- fill this section with appropirate and necessary section if a table is closed -->
                         @endif
@@ -348,10 +305,7 @@
     </div>
 
     <script>
-        // Duration selector logic
         const durationSelect = document.getElementById('duration');
-        // const openDurationContainer = document.getElementById('open-duration-container');
-        // const openDurationInput = document.getElementById('open-duration');
         const priceEstimation = document.getElementById('price-estimation');
         const estimatedPriceDisplay = document.getElementById('estimated-price');
         const estimatedPriceDisplayInfo = document.getElementById('estimated-price-info');
@@ -361,25 +315,6 @@
             estimatedPriceDisplayInfo.classList.add('hidden');
             estimatedPriceDisplay.textContent = `Please select a duration first!`;
         });
-
-        // durationSelect.addEventListener('change', function() {
-        //     if (this.value === '') {
-        //         estimatedPriceDisplayInfo.classList.add('hidden');
-        //         estimatedPriceDisplay.textContent = `Please select a duration first!`;
-        //     } else if (this.value === 'open') {
-        //         estimatedPriceDisplayInfo.classList.remove('hidden');
-        //         estimatedPriceDisplay.textContent =
-        //             `Price will be calculated based on actual duration at the end of session!`;
-        //         estimatedPriceDisplayInfo.textContent =
-        //             `Base rate: Rp ${numberFormat(pricePerHour)} per hour`;
-        //     } else if (this.value === '3-hour-package') {
-        //         estimatedPriceDisplayInfo.classList.remove('hidden');
-        //         const hours = 3;
-        //         const estimatedPrice = pricePerHour * hours;
-        //         estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
-        //         estimatedPriceDisplayInfo.textContent = `Fixed price for the 3-hour package`;
-        //     }
-        // });
 
         const priceInfoContainer = document.getElementById('price-info-container');
         const priceDetailsContainer = document.getElementById('price-details-container');
@@ -409,41 +344,42 @@
             }
         });
 
+        // Update form validation
         const bookingForm = document.querySelector('form');
         bookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!document.getElementById('datetime').value) {
+                showToast('Please select a time slot', 'error');
+                return;
+            }
+
+            if (!durationSelect.value) {
+                showToast('Please select a duration', 'error');
+                return;
+            }
+
             const selectedDateTime = new Date(document.getElementById('datetime').value);
             const now = new Date();
-
-            // Add 1 hour to current time for minimum booking time
             const minBookingTime = new Date(now.getTime() + (60 * 60 * 1000));
 
-            // Validate booking time
             if (selectedDateTime < minBookingTime) {
-                e.preventDefault();
                 showToast('Booking must be made at least 1 hour in advance', 'error');
                 return;
             }
 
-            // Validate duration for open bookings
-            if (durationSelect.value === 'open') {
-                const duration = parseInt(openDurationInput.value);
-                if (!duration || duration < 30) {
-                    e.preventDefault();
-                    showToast('Please specify a valid duration (minimum 30 minutes)', 'error');
-                    return;
-                }
-            }
-
-            // Show loading state
+            // Show loading state and submit
             const submitButton = this.querySelector('button[type="submit"]');
             submitButton.disabled = true;
             submitButton.innerHTML = `
-                <svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-            `;
+        <svg class="animate-spin h-5 w-5 text-black inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Processing...
+    `;
+
+            this.submit();
         });
 
         // User menu toggle
@@ -489,21 +425,141 @@
             }, 3000);
         }
 
-        // Set minimum date time for booking
         document.addEventListener('DOMContentLoaded', () => {
-            const datetimeInput = document.getElementById('datetime');
-            const now = new Date();
-            const minDateTime = new Date(now.getTime() + (60 * 60 * 1000)); // Add 1 hour
+            // Date selection
+            document.querySelectorAll('.date-selector').forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update selection UI
+                    document.querySelectorAll('.date-selector').forEach(btn => {
+                        btn.classList.remove('border-yellow-400', 'bg-yellow-400/10');
+                    });
+                    button.classList.add('border-yellow-400', 'bg-yellow-400/10');
 
-            // Format datetime for input
-            const year = minDateTime.getFullYear();
-            const month = String(minDateTime.getMonth() + 1).padStart(2, '0');
-            const day = String(minDateTime.getDate()).padStart(2, '0');
-            const hours = String(minDateTime.getHours()).padStart(2, '0');
-            const minutes = String(minDateTime.getMinutes()).padStart(2, '0');
+                    // Generate time slots
+                    generateTimeSlots(
+                        button.dataset.date,
+                        button.dataset.weekend === 'true'
+                    );
+                });
+            });
 
-            datetimeInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+            // Initialize with first date
+            const firstDate = document.querySelector('.date-selector');
+            if (firstDate) {
+                generateTimeSlots(
+                    firstDate.dataset.date,
+                    firstDate.dataset.weekend === 'true'
+                );
+            }
         });
+
+        function generateTimeSlots(date, isWeekend) {
+            const timeSlotsContainer = document.getElementById('timeSlots');
+            const operatingHoursInfo = document.getElementById('operatingHoursInfo');
+            const table_id = document.getElementById('table_id').value;
+
+            timeSlotsContainer.innerHTML =
+                '<div class="col-span-4 text-center py-4 text-gray-400">Loading available times...</div>';
+
+            fetch(`/booking/slots/${table_id}/${date}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        throw new Error(data.message);
+                    }
+
+                    timeSlotsContainer.innerHTML = '';
+                    const bookedSlots = data.slots;
+                    const now = new Date();
+                    const today = now.toISOString().split('T')[0];
+                    const oneHourFromNow = new Date(now.getTime() + (60 * 60 * 1000));
+
+                    const openingTime = isWeekend ? 11 : 10;
+                    const closingHour = isWeekend ? 25 : 24;
+
+                    for (let hour = openingTime; hour < closingHour; hour++) {
+                        for (let minute of [0, 30]) {
+                            const displayHour = hour >= 24 ? hour - 24 : hour;
+                            const timeString =
+                                `${String(displayHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+
+                            // Create slot time for comparison
+                            const slotTime = new Date(`${date}T${timeString}`);
+
+                            // Check if slot is within one hour from now
+                            const isPast = date === today && slotTime < oneHourFromNow;
+                            const isBooked = bookedSlots.includes(timeString);
+
+                            const button = document.createElement('button');
+                            button.type = 'button';
+                            button.className = `time-slot p-2 rounded-lg text-center transition-all ${
+                        isBooked || isPast 
+                            ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+                            : 'bg-gray-700 hover:bg-yellow-400/20 text-white'
+                    }`;
+                            button.disabled = isBooked || isPast;
+                            button.dataset.time = timeString;
+                            button.textContent = formatTime(timeString);
+
+                            if (isPast && !isBooked) {
+                                button.title = "Must book at least 1 hour in advance";
+                            }
+
+                            if (!isBooked && !isPast) {
+                                button.addEventListener('click', () => selectTimeSlot(button));
+                            }
+
+                            timeSlotsContainer.appendChild(button);
+                        }
+                    }
+
+                    operatingHoursInfo.textContent =
+                        `Operating hours: ${formatTime(`${openingTime}:00`)} - ${isWeekend ? '1:00 AM' : '12:00 AM'} next day`;
+
+                    // If all slots are unavailable for today, show a message
+                    if (date === today && !document.querySelector('.time-slot:not([disabled])')) {
+                        showToast('No available slots for today. Please try selecting another date.', 'info');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    timeSlotsContainer.innerHTML =
+                        '<div class="col-span-4 text-center py-4 text-red-400">Error loading time slots. Please try again.</div>';
+                    showToast('Error loading time slots. Please try again.', 'error');
+                });
+        }
+
+        // Add this helper function for better time formatting
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        function selectTimeSlot(button) {
+            if (button.disabled) {
+                showToast('This time slot is not available', 'error');
+                return;
+            }
+
+            document.querySelectorAll('.time-slot').forEach(btn => {
+                btn.classList.remove('bg-yellow-400', 'text-black', 'font-bold');
+            });
+
+            button.classList.add('bg-yellow-400', 'text-black', 'font-bold');
+
+            const selectedDate = document.querySelector('.date-selector.border-yellow-400').dataset.date;
+            const selectedTime = button.dataset.time;
+            document.getElementById('datetime').value = `${selectedDate}T${selectedTime}:00`;
+
+            showToast(`Selected time: ${formatTime(selectedTime)}`, 'info');
+
+            if (typeof calculatePrice === 'function') {
+                calculatePrice();
+            }
+        }
 
         const voucherSelect = document.getElementById('voucher_id');
         const loyaltyDiscountPercentage = {{ $loyaltyTier->table_discount_percentage ?? 0 }};
@@ -514,48 +570,78 @@
         const finalPriceDisplay = document.getElementById('final-price');
 
         function calculatePrice() {
-            let originalPrice = 0;
-            let finalPrice = 0;
+            try {
+                let originalPrice = 0;
+                let finalPrice = 0;
+                let voucherDiscount = 0; // Initialize voucherDiscount
 
-            // Calculate base price
-            const minutes = parseInt(durationSelect.value) || 0;
-            originalPrice = (pricePerHour * minutes) / 60;
-
-            originalPriceDisplay.textContent = `Rp ${numberFormat(originalPrice)}`;
-
-            // Apply loyalty discount
-            const loyaltyDiscount = Math.floor((originalPrice * loyaltyDiscountPercentage) / 100);
-            if (loyaltyDiscountDisplay) {
-                loyaltyDiscountDisplay.textContent = `-Rp ${numberFormat(loyaltyDiscount)}`;
-            }
-
-            finalPrice = originalPrice - loyaltyDiscount;
-
-            // Apply voucher discount if selected
-            if (voucherSelect && voucherSelect.value) {
-                const selectedOption = voucherSelect.selectedOptions[0];
-                const discountType = selectedOption.dataset.type;
-                const discountValue = parseInt(selectedOption.dataset.value);
-                const maxDiscount = parseInt(selectedOption.dataset.max);
-
-                let voucherDiscount = 0;
-                if (discountType === 'percentage') {
-                    voucherDiscount = Math.floor((originalPrice * discountValue) / 100);
-                    if (maxDiscount) {
-                        voucherDiscount = Math.min(voucherDiscount, maxDiscount);
-                    }
-                } else {
-                    voucherDiscount = discountValue;
+                // Calculate base price
+                const minutes = parseInt(durationSelect.value) || 0;
+                if (!minutes && durationSelect.value !== 'open') {
+                    showToast('Please select a valid duration', 'warning');
+                    return;
                 }
 
-                voucherDiscountRow.classList.remove('hidden');
-                voucherDiscountDisplay.textContent = `-Rp ${numberFormat(voucherDiscount)}`;
-                finalPrice -= voucherDiscount;
-            } else {
-                voucherDiscountRow.classList.add('hidden');
-            }
+                if (durationSelect.value === 'open') {
+                    // For open duration, just show the base rate
+                    priceInfoContainer.classList.remove('hidden');
+                    priceDetailsContainer.classList.add('hidden');
+                    initialMessage.textContent = 'Price will be calculated based on actual duration at the end of session!';
+                    initialInfo.textContent = `Base rate: Rp ${numberFormat(pricePerHour)} per hour`;
+                    initialInfo.classList.remove('hidden');
+                    return;
+                }
 
-            finalPriceDisplay.textContent = `Rp ${numberFormat(Math.max(0, finalPrice))}`;
+                // For 3-hour package
+                originalPrice = (pricePerHour * minutes) / 60;
+                originalPriceDisplay.textContent = `Rp ${numberFormat(originalPrice)}`;
+
+                // Apply loyalty discount
+                const loyaltyDiscount = Math.floor((originalPrice * loyaltyDiscountPercentage) / 100);
+                if (loyaltyDiscountDisplay) {
+                    loyaltyDiscountDisplay.textContent = `-Rp ${numberFormat(loyaltyDiscount)}`;
+                }
+
+                finalPrice = originalPrice - loyaltyDiscount;
+
+                // Apply voucher discount if selected
+                if (voucherSelect && voucherSelect.value) {
+                    const selectedOption = voucherSelect.selectedOptions[0];
+                    const discountType = selectedOption.dataset.type;
+                    const discountValue = parseInt(selectedOption.dataset.value);
+                    const maxDiscount = parseInt(selectedOption.dataset.max);
+
+                    if (discountType === 'percentage') {
+                        voucherDiscount = Math.floor((originalPrice * discountValue) / 100);
+                        if (maxDiscount) {
+                            voucherDiscount = Math.min(voucherDiscount, maxDiscount);
+                        }
+                    } else {
+                        voucherDiscount = discountValue;
+                    }
+
+                    voucherDiscountRow.classList.remove('hidden');
+                    voucherDiscountDisplay.textContent = `-Rp ${numberFormat(voucherDiscount)}`;
+                    finalPrice -= voucherDiscount;
+                } else {
+                    voucherDiscountRow.classList.add('hidden');
+                }
+
+                // Show price details
+                priceInfoContainer.classList.add('hidden');
+                priceDetailsContainer.classList.remove('hidden');
+                finalPriceDisplay.textContent = `Rp ${numberFormat(Math.max(0, finalPrice))}`;
+
+                // Show notification if significant discount applies
+                const totalDiscount = loyaltyDiscount + voucherDiscount;
+                if (totalDiscount > 0) {
+                    showToast(`You saved Rp ${numberFormat(totalDiscount)} with discounts!`, 'success');
+                }
+
+            } catch (error) {
+                console.error('Error calculating price:', error);
+                showToast('Error calculating price. Please try again.', 'error');
+            }
         }
 
         // Add event listeners
@@ -564,68 +650,190 @@
             voucherSelect.addEventListener('change', calculatePrice);
         }
 
-        // Add these variables
-        // const voucherSelect = document.getElementById('voucher_id');
-        // const loyaltyDiscountPercentage = {{ $loyaltyTier->table_discount_percentage ?? 0 }};
-        // const originalPriceDisplay = document.getElementById('original-price');
-        // const loyaltyDiscountDisplay = document.getElementById('loyalty-discount');
-        // const voucherDiscountRow = document.getElementById('voucher-discount-row');
-        // const voucherDiscountDisplay = document.getElementById('voucher-discount');
-        // const finalPriceDisplay = document.getElementById('final-price');
+        const ToastManager = {
+            queue: [],
+            isProcessing: false,
+            activeToasts: new Set(),
+            maxToasts: 3,
 
-        // function calculatePrice() {
-        //     let originalPrice = 0;
-        //     let finalPrice = 0;
+            createToast(message, type = 'success') {
+                const getIcon = (type) => {
+                    switch (type) {
+                        case 'success':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>`;
+                        case 'error':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>`;
+                        case 'warning':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>`;
+                        case 'info':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>`;
+                    }
+                };
 
-        //     // Calculate base price
-        //     const minutes = parseInt(durationSelect.value) || 0;
-        //     originalPrice = (pricePerHour * minutes) / 60;
+                const getStyles = (type) => {
+                    switch (type) {
+                        case 'success':
+                            return {
+                                background: 'bg-green-900/80',
+                                    border: 'border-green-700',
+                                    text: 'text-green-100',
+                                    icon: 'text-green-400'
+                            };
+                        case 'error':
+                            return {
+                                background: 'bg-red-900/80',
+                                    border: 'border-red-700',
+                                    text: 'text-red-100',
+                                    icon: 'text-red-400'
+                            };
+                        case 'warning':
+                            return {
+                                background: 'bg-yellow-900/80',
+                                    border: 'border-yellow-700',
+                                    text: 'text-yellow-100',
+                                    icon: 'text-yellow-400'
+                            };
+                        case 'info':
+                            return {
+                                background: 'bg-blue-900/80',
+                                    border: 'border-blue-700',
+                                    text: 'text-blue-100',
+                                    icon: 'text-blue-400'
+                            };
+                    }
+                };
 
-        //     originalPriceDisplay.textContent = `Rp ${numberFormat(originalPrice)}`;
+                const styles = getStyles(type);
+                const toast = document.createElement('div');
 
-        //     // Apply loyalty discount
-        //     const loyaltyDiscount = Math.floor((originalPrice * loyaltyDiscountPercentage) / 100);
-        //     if (loyaltyDiscountDisplay) {
-        //         loyaltyDiscountDisplay.textContent = `-Rp ${numberFormat(loyaltyDiscount)}`;
-        //     }
+                toast.className = `fixed right-4 flex items-start p-4 mb-4 rounded-lg border backdrop-blur
+            ${styles.background} ${styles.border} ${styles.text}
+            transform translate-x-full transition-all duration-300 ease-in-out z-50
+            max-w-sm sm:max-w-md`;
 
-        //     finalPrice = originalPrice - loyaltyDiscount;
+                toast.innerHTML = `
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 ${styles.icon}">
+                ${getIcon(type)}
+            </div>
+            <div class="ml-3 text-sm font-medium break-words flex-1 max-h-32 overflow-y-auto">
+                ${message}
+            </div>
+            <button type="button" class="ml-4 -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 
+                inline-flex h-8 w-8 flex-shrink-0 ${styles.text} hover:bg-white/10" 
+                onclick="ToastManager.removeToast(this.parentElement)">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        `;
 
-        //     // Apply voucher discount if selected
-        //     if (voucherSelect && voucherSelect.value) {
-        //         const selectedOption = voucherSelect.selectedOptions[0];
-        //         const discountType = selectedOption.dataset.type;
-        //         const discountValue = parseInt(selectedOption.dataset.value);
-        //         const maxDiscount = parseInt(selectedOption.dataset.max);
+                return toast;
+            },
 
-        //         let voucherDiscount = 0;
-        //         if (discountType === 'percentage') {
-        //             voucherDiscount = Math.floor((originalPrice * discountValue) / 100);
-        //             if (maxDiscount) {
-        //                 voucherDiscount = Math.min(voucherDiscount, maxDiscount);
-        //             }
-        //         } else {
-        //             voucherDiscount = discountValue;
-        //         }
+            positionToasts() {
+                const spacing = 12;
+                let currentTop = 16;
+                const toasts = Array.from(this.activeToasts);
 
-        //         voucherDiscountRow.classList.remove('hidden');
-        //         voucherDiscountDisplay.textContent = `-Rp ${numberFormat(voucherDiscount)}`;
-        //         finalPrice -= voucherDiscount;
-        //     } else {
-        //         voucherDiscountRow.classList.add('hidden');
-        //     }
+                toasts.forEach((toast) => {
+                    toast.style.top = `${currentTop}px`;
+                    const height = toast.offsetHeight;
+                    currentTop += height + spacing;
+                });
+            },
 
-        //     finalPriceDisplay.textContent = `Rp ${numberFormat(Math.max(0, finalPrice))}`;
-        // }
+            async removeToast(toast) {
+                toast.style.transform = 'translate(500px, 0)';
+                toast.style.opacity = '0';
 
-        // // Add event listeners
-        // durationSelect.addEventListener('change', calculatePrice);
-        // if (openDurationInput) {
-        //     openDurationInput.addEventListener('input', calculatePrice);
-        // }
-        // if (voucherSelect) {
-        //     voucherSelect.addEventListener('change', calculatePrice);
-        // }
+                this.activeToasts.delete(toast);
+                this.positionToasts();
+
+                await new Promise(resolve => setTimeout(resolve, 300));
+                if (toast.parentElement) {
+                    document.body.removeChild(toast);
+                }
+
+                this.processQueue();
+            },
+
+            async showToast(message, type = 'success') {
+                const toast = this.createToast(message, type);
+
+                if (this.activeToasts.size >= this.maxToasts) {
+                    this.queue.push({
+                        toast,
+                        message,
+                        type
+                    });
+                    return;
+                }
+
+                document.body.appendChild(toast);
+                this.activeToasts.add(toast);
+                this.positionToasts();
+
+                requestAnimationFrame(() => {
+                    toast.style.transform = 'translate(0, 0)';
+                });
+
+                setTimeout(() => {
+                    this.removeToast(toast);
+                }, 5000);
+            },
+
+            async processQueue() {
+                if (this.isProcessing || this.queue.length === 0 || this.activeToasts.size >= this.maxToasts) {
+                    return;
+                }
+
+                this.isProcessing = true;
+                const {
+                    message,
+                    type
+                } = this.queue.shift();
+                await this.showToast(message, type);
+                this.isProcessing = false;
+                this.processQueue();
+            }
+        };
+
+        // Replace existing showToast function with this one
+        function showToast(message, type = 'success') {
+            ToastManager.showToast(message, type);
+        }
+
+        // Initialize toasts from session messages
+        document.addEventListener('DOMContentLoaded', () => {
+            @if (session('success'))
+                showToast("{{ session('success') }}", 'success');
+            @endif
+
+            @if (session('error'))
+                showToast("{{ session('error') }}", 'error');
+            @endif
+
+            @if (session('warning'))
+                showToast("{{ session('warning') }}", 'warning');
+            @endif
+
+            @if (session('info'))
+                showToast("{{ session('info') }}", 'info');
+            @endif
+
+            const table = document.getElementById('table_id');
+            if (table) {
+                showToast(`Now booking Table #${table.value}`, 'info');
+            }
+        });
     </script>
 </body>
 

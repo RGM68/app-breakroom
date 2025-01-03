@@ -11,14 +11,18 @@ class TableBooking extends Model
         'user_id',
         'table_id',
         'booking_time',
+        'booking_type',
         'duration',
-        'status',
         'original_price',
+        'started_at',
+        'end_time',
+        'final_duration',
+        'status',
+        'is_active',
         'loyalty_discount',
         'voucher_discount',
         'used_voucher_id',
         'final_price',
-        'booking_type'
     ];
 
     //

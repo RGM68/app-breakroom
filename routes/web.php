@@ -126,8 +126,12 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         Route::get('/bookings', [TableBookingController::class, 'adminIndex'])->name('booking.index');
         Route::post('/bookings/{booking}/start', [TableBookingController::class, 'startSession'])
             ->name('bookings.start-session');
+        Route::post('/bookings/{booking}/end', [TableBookingController::class, 'endSession'])
+            ->name('bookings.end-session');
         Route::get('/booking/{id}/finish', [TableBookingController::class, 'finish'])->name('booking.finish');
         Route::get('/booking/{id}/cancel', [TableBookingController::class, 'cancel'])->name('booking.cancel');
+        Route::post('/bookings/{id}/cancel', [TableBookingController::class, 'cancel'])
+            ->name('bookings.cancel');
         Route::get('/bookings/prices', [TableBookingController::class, 'getUpdatedPrices'])
             ->name('bookings.prices');
         Route::get('/bookings/durations', [TableBookingController::class, 'getUpdatedDurations'])
@@ -225,6 +229,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/booking-history', [BookingController::class, 'history'])->name('booking-history.index');
     Route::get('/products/{id}', [ProductController::class, 'details'])->name('products.details');
     Route::post('/product/order', [ProductController::class, 'order'])->name('products.order');
+    Route::get('/booking/slots/{table_id}/{date}', [TableBookingController::class, 'getAvailableSlots'])
+        ->name('booking.slots');
 });
 
 // Public Routes

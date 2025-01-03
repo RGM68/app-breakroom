@@ -337,6 +337,186 @@
 
         setInterval(updateSessionTimers, 1000);
         updateSessionTimers();
+        
+        const ToastManager = {
+            queue: [],
+            isProcessing: false,
+            activeToasts: new Set(),
+            maxToasts: 3,
+
+            createToast(message, type = 'success') {
+                const getIcon = (type) => {
+                    switch (type) {
+                        case 'success':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>`;
+                        case 'error':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>`;
+                        case 'warning':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>`;
+                        case 'info':
+                            return `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>`;
+                    }
+                };
+
+                const getStyles = (type) => {
+                    switch (type) {
+                        case 'success':
+                            return {
+                                background: 'bg-green-900/80',
+                                    border: 'border-green-700',
+                                    text: 'text-green-100',
+                                    icon: 'text-green-400'
+                            };
+                        case 'error':
+                            return {
+                                background: 'bg-red-900/80',
+                                    border: 'border-red-700',
+                                    text: 'text-red-100',
+                                    icon: 'text-red-400'
+                            };
+                        case 'warning':
+                            return {
+                                background: 'bg-yellow-900/80',
+                                    border: 'border-yellow-700',
+                                    text: 'text-yellow-100',
+                                    icon: 'text-yellow-400'
+                            };
+                        case 'info':
+                            return {
+                                background: 'bg-blue-900/80',
+                                    border: 'border-blue-700',
+                                    text: 'text-blue-100',
+                                    icon: 'text-blue-400'
+                            };
+                    }
+                };
+
+                const styles = getStyles(type);
+                const toast = document.createElement('div');
+
+                toast.className = `fixed right-4 flex items-start p-4 mb-4 rounded-lg border backdrop-blur
+            ${styles.background} ${styles.border} ${styles.text}
+            transform translate-x-full transition-all duration-300 ease-in-out z-50
+            max-w-sm sm:max-w-md`;
+
+                toast.innerHTML = `
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 ${styles.icon}">
+                ${getIcon(type)}
+            </div>
+            <div class="ml-3 text-sm font-medium break-words flex-1 max-h-32 overflow-y-auto">
+                ${message}
+            </div>
+            <button type="button" class="ml-4 -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 
+                inline-flex h-8 w-8 flex-shrink-0 ${styles.text} hover:bg-white/10" 
+                onclick="ToastManager.removeToast(this.parentElement)">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        `;
+
+                return toast;
+            },
+
+            positionToasts() {
+                const spacing = 12;
+                let currentTop = 16;
+                const toasts = Array.from(this.activeToasts);
+
+                toasts.forEach((toast) => {
+                    toast.style.top = `${currentTop}px`;
+                    const height = toast.offsetHeight;
+                    currentTop += height + spacing;
+                });
+            },
+
+            async removeToast(toast) {
+                toast.style.transform = 'translate(500px, 0)';
+                toast.style.opacity = '0';
+
+                this.activeToasts.delete(toast);
+                this.positionToasts();
+
+                await new Promise(resolve => setTimeout(resolve, 300));
+                if (toast.parentElement) {
+                    document.body.removeChild(toast);
+                }
+
+                this.processQueue();
+            },
+
+            async showToast(message, type = 'success') {
+                const toast = this.createToast(message, type);
+
+                if (this.activeToasts.size >= this.maxToasts) {
+                    this.queue.push({
+                        toast,
+                        message,
+                        type
+                    });
+                    return;
+                }
+
+                document.body.appendChild(toast);
+                this.activeToasts.add(toast);
+                this.positionToasts();
+
+                requestAnimationFrame(() => {
+                    toast.style.transform = 'translate(0, 0)';
+                });
+
+                setTimeout(() => {
+                    this.removeToast(toast);
+                }, 5000);
+            },
+
+            async processQueue() {
+                if (this.isProcessing || this.queue.length === 0 || this.activeToasts.size >= this.maxToasts) {
+                    return;
+                }
+
+                this.isProcessing = true;
+                const {
+                    message,
+                    type
+                } = this.queue.shift();
+                await this.showToast(message, type);
+                this.isProcessing = false;
+                this.processQueue();
+            }
+        };
+
+        // Replace the existing showToast function with this one
+        function showToast(message, type = 'success') {
+            ToastManager.showToast(message, type);
+        }
+
+        // Check for session messages on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            @if (session('success'))
+                showToast("{{ session('success') }}", 'success');
+            @endif
+
+            @if (session('error'))
+                showToast("{{ session('error') }}", 'error');
+            @endif
+
+            @if (session('warning'))
+                showToast("{{ session('warning') }}", 'warning');
+            @endif
+
+            @if (session('info'))
+                showToast("{{ session('info') }}", 'info');
+            @endif
+        });
     </script>
 </body>
 
