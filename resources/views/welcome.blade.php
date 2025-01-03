@@ -72,7 +72,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <img src="{{ asset('photos/breakroom.png') }}" alt="Breakroom Logo" class="h-10 w-10 rounded-lg object-contain"/>
+                <img src="{{ asset('photos/breakroom.png') }}" alt="Breakroom Logo"
+                    class="h-16 w-16 rounded-lg object-contain" />
                     <span class="ml-3 text-xl font-bold gradient-text">Breakroom</span>
                 </div>
                 
@@ -140,7 +141,7 @@
         </div>
 
         <!-- Scroll Down Indicator -->
-        <div class="scroll-down text-yellow-400 text-center">
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-yellow-400 text-center">
             <p class="mb-2 text-sm font-medium">Discover More</p>
             <svg class="w-6 h-6 mx-auto animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
@@ -150,7 +151,7 @@
 
     <!-- Features Section -->
     <div class="py-20 px-4 glass-effect">
-        <div class="max-w-6xl mx-auto">
+        <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Experience Excellence</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
                 <!-- Premium Tables -->
@@ -200,7 +201,7 @@
 
     <!-- Maps Section -->
     <div class="py-20 px-4">
-        <div class="max-w-6xl mx-auto">
+        <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl font-bold text-center mb-16 gradient-text" data-aos="fade-up">Find Us</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Map -->
@@ -269,7 +270,7 @@
                         </div>
 
                         <!-- Action Button -->
-                        <div class="text-center mt-6">
+                        <div class="text-center mt-11">
                             <a href="#" class="inline-block bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold px-6 py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition-all duration-200">
                                 Book a Table Now
                             </a>
@@ -282,7 +283,7 @@
 
     <!-- Footer -->
     <footer class="glass-effect py-12">
-        <div class="max-w-6xl mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
                 <!-- Company Info -->
                 <div>
