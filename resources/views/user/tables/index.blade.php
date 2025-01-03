@@ -28,9 +28,12 @@
                     <div class="hidden md:flex space-x-6">
                         <a href="{{ route('dashboard') }}" class="hover:text-yellow-400 transition-colors">Home</a>
                         <a href="{{ route('user.tables') }}" class="hover:text-yellow-400 transition-colors">Tables</a>
-                        <a href="{{route('user.event.index')}}" class="hover:text-yellow-400 transition-colors">Events</a>
-                        <a href="{{route('food-and-drinks.index')}}" class="hover:text-yellow-400 transition-colors">Food & Drinks</a>
-                        <a href="{{route('products.index')}}" class="hover:text-yellow-400 transition-colors">Products</a>
+                        <a href="{{ route('user.event.index') }}"
+                            class="hover:text-yellow-400 transition-colors">Events</a>
+                        <a href="{{ route('food-and-drinks.index') }}"
+                            class="hover:text-yellow-400 transition-colors">Food & Drinks</a>
+                        <a href="{{ route('products.index') }}"
+                            class="hover:text-yellow-400 transition-colors">Products</a>
                     </div>
                 </div>
 
@@ -149,14 +152,16 @@
                                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                                     <!-- Status Badge -->
                                     <div class="absolute top-4 right-4">
-                                    <span class="px-3 py-1 rounded-full text-sm {{ strtolower($table->status) == 'open' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300' }}">
-                                        {{ $table->status }}
-                                    </span>
+                                        <span
+                                            class="px-3 py-1 rounded-full text-sm {{ strtolower($table->status) == 'open' ? 'bg-green-900 text-green-300' : 'bg-red-900 text-red-300' }}">
+                                            {{ $table->status }}
+                                        </span>
                                     </div>
                                 </div>
 
                                 <!-- Table Info -->
-                                <div class="p-6 {{ strtolower($table->status_flag) == 'closed' ? 'opacity-50' : ''  }}">
+                                <div
+                                    class="p-6 {{ strtolower($table->status_flag) == 'closed' ? 'opacity-50' : '' }}">
                                     <h3 class="text-xl font-bold text-yellow-400 mb-2">Table {{ $table->number }}</h3>
                                     <div class="space-y-2 text-gray-300">
                                         <p class="flex items-center">
@@ -188,10 +193,13 @@
                                         </div>
                                     @elseif (strtolower($table->status_flag) == 'closed')
                                         <div class="mt-6">
-                                                <p class="text-center text-white font-bold py-3 rounded-lg">
+                                            <p class="text-center text-white font-bold py-3 rounded-lg">
                                                 Closed
-                                                </p>
+                                            </p>
                                         </div>
+                                    @endif
+                                    @if ($table->activeBooking)
+                                        <x-session-timer :booking="$table->activeBooking" :table-id="$table->id" />
                                     @endif
                                 </div>
                             </div>
@@ -307,6 +315,28 @@
                 }
             });
         });
+
+        function updateSessionTimers() {
+            fetch('{{ route('user.tables.active-sessions') }}')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(session => {
+                        const durationElement = document.getElementById(`duration-${session.id}`);
+                        const priceElement = document.getElementById(`price-${session.id}`);
+
+                        if (durationElement) {
+                            durationElement.textContent = session.duration_display;
+                        }
+                        if (priceElement) {
+                            priceElement.textContent = `Rp ${session.current_price.toLocaleString()}`;
+                        }
+                    });
+                })
+                .catch(error => console.error('Error updating session timers:', error));
+        }
+
+        setInterval(updateSessionTimers, 1000);
+        updateSessionTimers();
     </script>
 </body>
 

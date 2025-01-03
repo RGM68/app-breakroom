@@ -14,7 +14,7 @@ class TableController extends Controller
     public function index()
     {
         //
-        $tables = Table::orderBy('number', 'asc')->get();
+        $tables = Table::with('activeBooking')->orderBy('number', 'asc')->get();
         foreach ($tables as $table) {
             $table->image_url = Storage::url($table->image);
         }

@@ -76,19 +76,19 @@
             </div>
         </div>
     </nav>
-    @if(session('success'))
+    @if (session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
             {{ session('success') }}
         </div>
     @endif
 
-    @if(session('error'))
+    @if (session('error'))
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
             {{ session('error') }}
         </div>
     @endif
     <!-- Main Content -->
-     
+
     <div class="pt-20 pb-12 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Booking Form Card -->
@@ -133,80 +133,6 @@
                             </div>
                         </div>
 
-                        <!-- Loyalty Benefits & Discounts -->
-                        <div class="bg-gray-900/50 rounded-lg p-4 mb-6">
-                            <div class="flex items-center justify-between mb-3">
-                                <div>
-                                    <span class="text-sm text-gray-400">Your Loyalty Tier</span>
-                                    <h3 class="text-lg font-bold text-yellow-400">{{ $loyaltyTier->name }}</h3>
-                                </div>
-                                @if($loyaltyTier->table_discount_percentage > 0)
-                                    <span class="bg-green-900/80 text-green-300 px-3 py-1 rounded-full text-sm">
-                                        {{ $loyaltyTier->table_discount_percentage }}% Tier Discount
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Voucher Selection -->
-                        @if($applicableVouchers->isNotEmpty())
-                            <div class="space-y-2">
-                                <label for="voucher_id" class="block text-sm font-medium text-gray-300">Apply Voucher (Optional)</label>
-                                <select name="voucher_id" 
-                                        id="voucher_id"
-                                        class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                                    <option value="">No voucher</option>
-                                    @foreach($applicableVouchers as $userVoucher)
-                                        <option value="{{ $userVoucher->id }}" 
-                                                data-type="{{ $userVoucher->voucher->discount_type }}"
-                                                data-value="{{ $userVoucher->voucher->discount_value }}"
-                                                data-min="{{ $userVoucher->voucher->min_purchase }}"
-                                                data-max="{{ $userVoucher->voucher->max_discount }}">
-                                            {{ $userVoucher->voucher->name }} 
-                                            (@if($userVoucher->voucher->discount_type === 'percentage')
-                                                {{ $userVoucher->voucher->discount_value }}%
-                                            @else
-                                                Rp {{ number_format($userVoucher->voucher->discount_value) }}
-                                            @endif off)
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-
-                        <!-- Modified Price Estimation with Discounts -->
-                        <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
-                            <h4 class="text-sm font-medium text-gray-300 mb-2">Price Details</h4>
-                            <div class="space-y-2">
-                                <!-- Original Price -->
-                                <div class="flex justify-between items-center">
-                                    <span>Original Price</span>
-                                    <span id="original-price" class="text-gray-400"></span>
-                                </div>
-                                
-                                <!-- Loyalty Discount -->
-                                @if($loyaltyTier->table_discount_percentage > 0)
-                                    <div class="flex justify-between items-center text-green-400">
-                                        <span>Loyalty Tier Discount ({{ $loyaltyTier->table_discount_percentage }}%)</span>
-                                        <span id="loyalty-discount">-Rp 0</span>
-                                    </div>
-                                @endif
-                                
-                                <!-- Voucher Discount (Hidden by default) -->
-                                <div id="voucher-discount-row" class="flex justify-between items-center text-green-400 hidden">
-                                    <span id="voucher-label">Voucher Discount</span>
-                                    <span id="voucher-discount">-Rp 0</span>
-                                </div>
-                                
-                                <!-- Final Price -->
-                                <div class="flex justify-between items-center pt-2 border-t border-gray-700">
-                                    <span>Final Price</span>
-                                    <span id="final-price" class="text-xl font-bold text-yellow-400">Rp 0</span>
-                                </div>
-                            </div>
-                            <p class="text-xs text-gray-400 mt-1" id="price-info"></p>
-                        </div>
-
                         @if (strtolower($table->status) == 'open')
                             <!-- Datetime Picker -->
                             <div class="space-y-2">
@@ -225,11 +151,13 @@
                                 <select name="duration" id="duration"
                                     class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                                     required>
-                                <option value="" disabled selected>Choose your duration</option>
-                                <option value="180" {{ old('duration') == '180' ? 'selected' : '' }}>Package - 3 Hours</option>
-                                <option value="open" {{ old('duration') == 'open' ? 'selected' : '' }}>Open Duration</option>
-                            </select>
-                        </div>
+                                    <option value="" disabled selected>Choose your duration</option>
+                                    <option value="180" {{ old('duration') == '180' ? 'selected' : '' }}>Package - 3
+                                        Hours</option>
+                                    <option value="open" {{ old('duration') == 'open' ? 'selected' : '' }}>Open
+                                        Duration</option>
+                                </select>
+                            </div>
 
                             {{-- <!-- Custom Duration Input (Hidden by default) -->
                             <div id="open-duration-container" class="space-y-2 hidden">
@@ -241,12 +169,130 @@
                                 <p class="text-sm text-gray-400">Minimum duration: 30 minutes</p>
                             </div> --}}
 
+                            <!-- Loyalty Benefits & Discounts -->
+                            <div class="bg-gray-900/50 rounded-lg p-4 mb-6">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div>
+                                        <span class="text-sm text-gray-400">Your Loyalty Tier</span>
+                                        <h3 class="text-lg font-bold text-yellow-400">{{ $loyaltyTier->name }}</h3>
+                                    </div>
+                                    @if ($loyaltyTier->table_discount_percentage > 0)
+                                        <span class="bg-green-900/80 text-green-300 px-3 py-1 rounded-full text-sm">
+                                            {{ $loyaltyTier->table_discount_percentage }}% Tier Discount
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Voucher Selection -->
+                            @if ($applicableVouchers->isNotEmpty())
+                                <div class="space-y-2">
+                                    <label for="voucher_id" class="block text-sm font-medium text-gray-300">Apply
+                                        Voucher (Optional)</label>
+                                    <select name="voucher_id" id="voucher_id"
+                                        class="w-full bg-gray-900/50 border border-gray-700 text-white rounded-lg p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                                        <option value="">No voucher</option>
+                                        @foreach ($applicableVouchers as $userVoucher)
+                                            <option value="{{ $userVoucher->id }}"
+                                                data-type="{{ $userVoucher->voucher->discount_type }}"
+                                                data-value="{{ $userVoucher->voucher->discount_value }}"
+                                                data-min="{{ $userVoucher->voucher->min_purchase }}"
+                                                data-max="{{ $userVoucher->voucher->max_discount }}">
+                                                {{ $userVoucher->voucher->name }}
+                                                (@if ($userVoucher->voucher->discount_type === 'percentage')
+                                                    {{ $userVoucher->voucher->discount_value }}%
+                                                @else
+                                                    Rp {{ number_format($userVoucher->voucher->discount_value) }}
+                                                @endif off)
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
+                            {{-- <!-- Price Estimation -->
+                            <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
+                                <h4 class="text-sm font-medium text-gray-300 mb-2">Price Details</h4>
+                                <div class="space-y-2">
+                                    <!-- Original Price -->
+                                    <div class="flex justify-between items-center">
+                                        <span>Original Price</span>
+                                        <span id="original-price" class="text-gray-400"></span>
+                                    </div>
+
+                                    <!-- Loyalty Discount -->
+                                    @if ($loyaltyTier->table_discount_percentage > 0)
+                                        <div class="flex justify-between items-center text-green-400">
+                                            <span>Loyalty Tier Discount
+                                                ({{ $loyaltyTier->table_discount_percentage }}%)</span>
+                                            <span id="loyalty-discount">-Rp 0</span>
+                                        </div>
+                                    @endif
+
+                                    <!-- Voucher Discount (Hidden by default) -->
+                                    <div id="voucher-discount-row"
+                                        class="flex justify-between items-center text-green-400 hidden">
+                                        <span id="voucher-label">Voucher Discount</span>
+                                        <span id="voucher-discount">-Rp 0</span>
+                                    </div>
+
+                                    <!-- Final Price -->
+                                    <div class="flex justify-between items-center pt-2 border-t border-gray-700">
+                                        <span>Final Price</span>
+                                        <span id="final-price" class="text-xl font-bold text-yellow-400">Rp 0</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1" id="price-info"></p>
+                            </div> --}}
+
                             <!-- Price Estimation -->
                             <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
+                                <h4 class="text-sm font-medium text-gray-300 mb-2">Price Details</h4>
+                                <div id="price-info-container">
+                                    <p class="text-xl font-bold text-yellow-400" id="initial-message">Please select a
+                                        duration first!</p>
+                                    <p class="text-xs text-gray-400 mt-1 hidden" id="initial-info"></p>
+                                </div>
+
+                                <div id="price-details-container" class="space-y-2 hidden">
+                                    <!-- Original Price -->
+                                    <div class="flex justify-between items-center">
+                                        <span>Original Price</span>
+                                        <span id="original-price" class="text-gray-400"></span>
+                                    </div>
+
+                                    <!-- Loyalty Discount -->
+                                    @if ($loyaltyTier->table_discount_percentage > 0)
+                                        <div class="flex justify-between items-center text-green-400">
+                                            <span>Loyalty Tier Discount
+                                                ({{ $loyaltyTier->table_discount_percentage }}%)</span>
+                                            <span id="loyalty-discount">-Rp 0</span>
+                                        </div>
+                                    @endif
+
+                                    <!-- Voucher Discount (Hidden by default) -->
+                                    <div id="voucher-discount-row"
+                                        class="flex justify-between items-center text-green-400 hidden">
+                                        <span id="voucher-label">Voucher Discount</span>
+                                        <span id="voucher-discount">-Rp 0</span>
+                                    </div>
+
+                                    <!-- Final Price -->
+                                    <div class="flex justify-between items-center pt-2 border-t border-gray-700">
+                                        <span>Final Price</span>
+                                        <span id="final-price" class="text-xl font-bold text-yellow-400">Rp 0</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1" id="price-info"></p>
+                            </div>
+
+                            <!-- Price Estimation -->
+                            {{-- <div id="price-estimation" class="bg-gray-900/50 rounded-lg p-4">
                                 <h4 class="text-sm font-medium text-gray-300 mb-2">Estimated Price</h4>
                                 <p class="text-xl font-bold text-yellow-400" id="estimated-price">Rp 0</p>
-                                <p class="text-xs text-gray-400 mt-1" id="estimated-price-info">Final price may vary based on actual duration</p>
-                            </div>
+                                <p class="text-xs text-gray-400 mt-1" id="estimated-price-info">Final price may vary
+                                    based on actual duration</p>
+                            </div> --}}
                         @elseif (strtolower($table->status) == 'closed')
                             <!-- fill this section with appropirate and necessary section if a table is closed -->
                         @endif
@@ -315,57 +361,54 @@
             estimatedPriceDisplayInfo.classList.add('hidden');
             estimatedPriceDisplay.textContent = `Please select a duration first!`;
         });
-        
+
+        // durationSelect.addEventListener('change', function() {
+        //     if (this.value === '') {
+        //         estimatedPriceDisplayInfo.classList.add('hidden');
+        //         estimatedPriceDisplay.textContent = `Please select a duration first!`;
+        //     } else if (this.value === 'open') {
+        //         estimatedPriceDisplayInfo.classList.remove('hidden');
+        //         estimatedPriceDisplay.textContent =
+        //             `Price will be calculated based on actual duration at the end of session!`;
+        //         estimatedPriceDisplayInfo.textContent =
+        //             `Base rate: Rp ${numberFormat(pricePerHour)} per hour`;
+        //     } else if (this.value === '3-hour-package') {
+        //         estimatedPriceDisplayInfo.classList.remove('hidden');
+        //         const hours = 3;
+        //         const estimatedPrice = pricePerHour * hours;
+        //         estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
+        //         estimatedPriceDisplayInfo.textContent = `Fixed price for the 3-hour package`;
+        //     }
+        // });
+
+        const priceInfoContainer = document.getElementById('price-info-container');
+        const priceDetailsContainer = document.getElementById('price-details-container');
+        const initialMessage = document.getElementById('initial-message');
+        const initialInfo = document.getElementById('initial-info');
+
         durationSelect.addEventListener('change', function() {
-            if (this.value === 'none') {
-                estimatedPriceDisplayInfo.classList.add('hidden');
-                estimatedPriceDisplay.textContent = `Please select a duration first!`;
+            if (this.value === '') {
+                // Show initial message, hide price details
+                priceInfoContainer.classList.remove('hidden');
+                priceDetailsContainer.classList.add('hidden');
+                initialMessage.textContent = 'Please select a duration first!';
+                initialInfo.classList.add('hidden');
             } else if (this.value === 'open') {
-                estimatedPriceDisplayInfo.classList.remove('hidden');
-                estimatedPriceDisplay.textContent =
-                `Price will be calculated based on actual duration at the end of session!`;
-                estimatedPriceDisplayInfo.textContent =
-                `Base rate: Rp ${numberFormat(pricePerHour)} per hour`;
-            } else if (this.value === '3-hour-package') {
-                estimatedPriceDisplayInfo.classList.remove('hidden');
-                const hours = 3;
-                const estimatedPrice = pricePerHour * hours;
-                estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
-                estimatedPriceDisplayInfo.textContent = `Fixed price for the 3-hour package`;
+                // Show open duration message, hide price details
+                priceInfoContainer.classList.remove('hidden');
+                priceDetailsContainer.classList.add('hidden');
+                initialMessage.textContent =
+                    'Price will be calculated based on actual duration at the end of session!';
+                initialInfo.textContent = `Base rate: Rp ${numberFormat(pricePerHour)} per hour`;
+                initialInfo.classList.remove('hidden');
+            } else {
+                // Show price details, hide initial message
+                priceInfoContainer.classList.add('hidden');
+                priceDetailsContainer.classList.remove('hidden');
+                calculatePrice();
             }
         });
 
-        // durationSelect.addEventListener('change', function() {
-        // if (this.value === 'open') {
-        //     openDurationContainer.classList.remove('hidden');
-        //     openDurationInput.required = true;
-        //     const hours = 3; // 3-hour package
-        //     const estimatedPrice = pricePerHour * hours;
-        //     estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
-        // } else {
-        //     openDurationContainer.classList.add('hidden');
-        //     openDurationInput.required = false;
-        //     // Calculate fixed package price
-        //     const hours = 3; // 3-hour package
-        //     const estimatedPrice = pricePerHour * hours;
-        //     estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
-        //     priceEstimation.classList.remove('hidden');
-        // }
-        // });
-
-        // Calculate estimated price for open duration
-        // openDurationInput.addEventListener('input', function() {
-        //     const minutes = parseInt(this.value) || 0;
-        //     if (minutes >= 30) {
-        //         priceEstimation.classList.remove('hidden');
-        //     } else
-        //         priceEstimation.classList.add('hidden');
-        //     const hours = minutes / 60;
-        //     const estimatedPrice = pricePerHour * hours;
-        //     estimatedPriceDisplay.textContent = `Rp ${numberFormat(estimatedPrice)}`;
-        // });
-
-        // Form submission handling
         const bookingForm = document.querySelector('form');
         bookingForm.addEventListener('submit', function(e) {
             const selectedDateTime = new Date(document.getElementById('datetime').value);
@@ -462,7 +505,6 @@
             datetimeInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
         });
 
-        // Add these variables
         const voucherSelect = document.getElementById('voucher_id');
         const loyaltyDiscountPercentage = {{ $loyaltyTier->table_discount_percentage ?? 0 }};
         const originalPriceDisplay = document.getElementById('original-price');
@@ -474,28 +516,28 @@
         function calculatePrice() {
             let originalPrice = 0;
             let finalPrice = 0;
-            
+
             // Calculate base price
             const minutes = parseInt(durationSelect.value) || 0;
             originalPrice = (pricePerHour * minutes) / 60;
-            
+
             originalPriceDisplay.textContent = `Rp ${numberFormat(originalPrice)}`;
-            
+
             // Apply loyalty discount
             const loyaltyDiscount = Math.floor((originalPrice * loyaltyDiscountPercentage) / 100);
             if (loyaltyDiscountDisplay) {
                 loyaltyDiscountDisplay.textContent = `-Rp ${numberFormat(loyaltyDiscount)}`;
             }
-            
+
             finalPrice = originalPrice - loyaltyDiscount;
-            
+
             // Apply voucher discount if selected
             if (voucherSelect && voucherSelect.value) {
                 const selectedOption = voucherSelect.selectedOptions[0];
                 const discountType = selectedOption.dataset.type;
                 const discountValue = parseInt(selectedOption.dataset.value);
                 const maxDiscount = parseInt(selectedOption.dataset.max);
-                
+
                 let voucherDiscount = 0;
                 if (discountType === 'percentage') {
                     voucherDiscount = Math.floor((originalPrice * discountValue) / 100);
@@ -505,25 +547,85 @@
                 } else {
                     voucherDiscount = discountValue;
                 }
-                
+
                 voucherDiscountRow.classList.remove('hidden');
                 voucherDiscountDisplay.textContent = `-Rp ${numberFormat(voucherDiscount)}`;
                 finalPrice -= voucherDiscount;
             } else {
                 voucherDiscountRow.classList.add('hidden');
             }
-            
+
             finalPriceDisplay.textContent = `Rp ${numberFormat(Math.max(0, finalPrice))}`;
         }
 
         // Add event listeners
         durationSelect.addEventListener('change', calculatePrice);
-        if (openDurationInput) {
-            openDurationInput.addEventListener('input', calculatePrice);
-        }
         if (voucherSelect) {
             voucherSelect.addEventListener('change', calculatePrice);
         }
+
+        // Add these variables
+        // const voucherSelect = document.getElementById('voucher_id');
+        // const loyaltyDiscountPercentage = {{ $loyaltyTier->table_discount_percentage ?? 0 }};
+        // const originalPriceDisplay = document.getElementById('original-price');
+        // const loyaltyDiscountDisplay = document.getElementById('loyalty-discount');
+        // const voucherDiscountRow = document.getElementById('voucher-discount-row');
+        // const voucherDiscountDisplay = document.getElementById('voucher-discount');
+        // const finalPriceDisplay = document.getElementById('final-price');
+
+        // function calculatePrice() {
+        //     let originalPrice = 0;
+        //     let finalPrice = 0;
+
+        //     // Calculate base price
+        //     const minutes = parseInt(durationSelect.value) || 0;
+        //     originalPrice = (pricePerHour * minutes) / 60;
+
+        //     originalPriceDisplay.textContent = `Rp ${numberFormat(originalPrice)}`;
+
+        //     // Apply loyalty discount
+        //     const loyaltyDiscount = Math.floor((originalPrice * loyaltyDiscountPercentage) / 100);
+        //     if (loyaltyDiscountDisplay) {
+        //         loyaltyDiscountDisplay.textContent = `-Rp ${numberFormat(loyaltyDiscount)}`;
+        //     }
+
+        //     finalPrice = originalPrice - loyaltyDiscount;
+
+        //     // Apply voucher discount if selected
+        //     if (voucherSelect && voucherSelect.value) {
+        //         const selectedOption = voucherSelect.selectedOptions[0];
+        //         const discountType = selectedOption.dataset.type;
+        //         const discountValue = parseInt(selectedOption.dataset.value);
+        //         const maxDiscount = parseInt(selectedOption.dataset.max);
+
+        //         let voucherDiscount = 0;
+        //         if (discountType === 'percentage') {
+        //             voucherDiscount = Math.floor((originalPrice * discountValue) / 100);
+        //             if (maxDiscount) {
+        //                 voucherDiscount = Math.min(voucherDiscount, maxDiscount);
+        //             }
+        //         } else {
+        //             voucherDiscount = discountValue;
+        //         }
+
+        //         voucherDiscountRow.classList.remove('hidden');
+        //         voucherDiscountDisplay.textContent = `-Rp ${numberFormat(voucherDiscount)}`;
+        //         finalPrice -= voucherDiscount;
+        //     } else {
+        //         voucherDiscountRow.classList.add('hidden');
+        //     }
+
+        //     finalPriceDisplay.textContent = `Rp ${numberFormat(Math.max(0, finalPrice))}`;
+        // }
+
+        // // Add event listeners
+        // durationSelect.addEventListener('change', calculatePrice);
+        // if (openDurationInput) {
+        //     openDurationInput.addEventListener('input', calculatePrice);
+        // }
+        // if (voucherSelect) {
+        //     voucherSelect.addEventListener('change', calculatePrice);
+        // }
     </script>
 </body>
 
